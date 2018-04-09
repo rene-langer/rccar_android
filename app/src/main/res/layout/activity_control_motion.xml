@@ -47,7 +47,8 @@
         android:id="@+id/buttonHornMotion"
         android:layout_width="95dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         android:text="Horn"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -56,12 +57,42 @@
         android:id="@+id/toggleButtonLightMotion"
         android:layout_width="95dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="5dp"
         android:checked="false"
         android:text="ToggleButton"
         android:textOff="Light Off"
         android:textOn="Light On"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonHornMotion" />
+
+    <Button
+        android:id="@+id/buttonCalibrationMotion"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="5dp"
+        android:text="Calibrate"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toggleButtonLightMotion" />
+
+    <CheckBox
+        android:id="@+id/checkBoxChangeAxisMotion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="Change Axis"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/checkBoxLimitationMotion" />
+
+    <CheckBox
+        android:id="@+id/checkBoxLimitationMotion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="5dp"
+        android:text="Limitation"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonCalibrationMotion" />
 
 </android.support.constraint.ConstraintLayout>
