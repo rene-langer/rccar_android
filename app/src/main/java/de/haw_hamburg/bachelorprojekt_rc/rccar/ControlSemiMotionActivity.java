@@ -45,7 +45,7 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
     byte[] data;
     int hornIsActive;
     int lightIsActive;
-    boolean calibrateIsActive;
+    boolean calibrationIsActive;
 
 
     @Override
@@ -87,7 +87,7 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
         positionSteeringOffset = 0;
         hornIsActive = 0;
         lightIsActive = 0;
-        calibrateIsActive = false;
+        calibrationIsActive = false;
 
         // Send data output
         textViewSendSemiMotion = (TextView) findViewById(R.id.textViewSendSemiMotion);
@@ -157,7 +157,7 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
                        break;
                }
            case R.id.buttonCalibrationSemiMotion:   // Button Calibration
-               calibrateIsActive = true;
+               calibrationIsActive = true;
        }
 
         // Send data
@@ -183,11 +183,11 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
     public void onSensorChanged(SensorEvent event) {
 
         // Calibration
-        if (calibrateIsActive) {
+        if (calibrationIsActive) {
             positionSteeringOffset = event.values[1];
 
             // reset
-            calibrateIsActive = false;
+            calibrationIsActive = false;
         }
 
         // get sensor information and calculate output

@@ -52,7 +52,7 @@ public class ControlMotionActivity extends AppCompatActivity implements SensorEv
     byte[] data;
     int hornIsActive;
     int lightIsActive;
-    boolean calibrateIsActive;
+    boolean calibrationIsActive;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +97,7 @@ public class ControlMotionActivity extends AppCompatActivity implements SensorEv
         positionSteeringOffset = 0;
         hornIsActive = 0;
         lightIsActive = 0;
-        calibrateIsActive = false;
+        calibrationIsActive = false;
 
         // Send data output
         textViewSendMotion = (TextView) findViewById(R.id.textViewSendMotion);
@@ -168,7 +168,7 @@ public class ControlMotionActivity extends AppCompatActivity implements SensorEv
                         break;
                 }
             case R.id.buttonCalibrationMotion:  // Button Calibration
-                calibrateIsActive = true;
+                calibrationIsActive = true;
         }
 
         // Sending data
@@ -193,17 +193,30 @@ public class ControlMotionActivity extends AppCompatActivity implements SensorEv
     @Override
     public void onSensorChanged(SensorEvent event) {
 
+        //Change axis
+        float axis0, axis1;
+        if (checkBoxChangeAxisMotion.isChecked()) {
+            // modified
+            axis0 = event.values[1];
+            axis1 = event.values[0];
+        } else {
+            // standard
+            axis0 = event.values[0];
+            axis1 = event.values[1];
+        }
+
+
         // Calibration
-        if (calibrateIsActive) {
-            positionSteeringOffset = event.values[1];
-            positionDriveOffset = event.values[0];
+        if (calibrationIsActive) {
+            positionSteeringOffset = axis1;
+            positionDriveOffset = axis0;
 
             // reset
-            calibrateIsActive = false;
+            calibrationIsActive = false;
         }
 
         // get sensor information and calculate steering
-        positionSteering = event.values[1] - positionSteeringOffset;
+        positionSteering = axis1 - positionSteeringOffset;
 
         if (positionSteering < -5)
             positionSteering = 0;
@@ -214,21 +227,23 @@ public class ControlMotionActivity extends AppCompatActivity implements SensorEv
 
 
         // get sensor information and calculate drive
-        positionDrive = -event.values[0] + positionDriveOffset;
+        positionDrive = -axis0 + positionDriveOffset;
 
         if (positionDrive < -5)
             positionDrive = 0;
         else if (positionDrive > 5)
             positionDrive = 255;
         else
-            positionDrive = Math.round((positionDrive + 7) * 256 / 10);
+            positionDrive = Math.round((positionDrive + 5) * 256 / 10);
 
         // Calculate correct steering
         //output = (input - input_start)*output_range / input_range + output_start;
 
         // Limitation
         if (checkBoxLimitationMotion.isChecked()) {
-            if (positionDrive >= 200)
+            if (positionDrive <= 60)
+                positionDrive = 60;
+            else if (positionDrive >= 200)
                 positionDrive = 200;
         }
 
