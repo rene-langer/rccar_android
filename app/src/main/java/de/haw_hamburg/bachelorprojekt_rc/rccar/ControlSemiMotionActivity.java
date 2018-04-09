@@ -31,12 +31,11 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
     Sensor sensor;
     float positionSteering;
     float positionSteeringOffset;
-    boolean steeringIsStarted;
-    boolean steeringIsStartedFirst;
 
-    // Buttons (Light and Horn)
+    // Buttons (Light, Horn and Calibration)
     Button buttonHornSemiMotion;
     ToggleButton toggleButtonLightSemiMotion;
+    Button buttonCalibrationSemiMotion;
 
     // Send data
     private SocketClient client = null;
@@ -46,6 +45,7 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
     byte[] data;
     int hornIsActive;
     int lightIsActive;
+    boolean calibrateIsActive;
 
 
     @Override
@@ -74,18 +74,20 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
             startActivity(intent);
         }
 
-        // Buttons (Light and Horn)
+        // Buttons (Light, Horn and Calibration)
         buttonHornSemiMotion = (Button) findViewById(R.id.buttonHornSemiMotion);
         buttonHornSemiMotion.setOnTouchListener(this);
         ToggleButton toggleButtonLightSemiMotion = (ToggleButton) findViewById(R.id.toggleButtonLightSemiMotion);
         toggleButtonLightSemiMotion.setOnCheckedChangeListener(this);
+        buttonCalibrationSemiMotion = (Button) findViewById(R.id.buttonCalibrationSemiMotion);
+        buttonCalibrationSemiMotion.setOnTouchListener(this);
 
         // reset information
-        steeringIsStarted = false;
-        steeringIsStartedFirst = true;
+        positionSteering = 0;
         positionSteeringOffset = 0;
         hornIsActive = 0;
         lightIsActive = 0;
+        calibrateIsActive = false;
 
         // Send data output
         textViewSendSemiMotion = (TextView) findViewById(R.id.textViewSendSemiMotion);
@@ -139,18 +141,24 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
         sendByteInstruction(data);
     }
 
-    // Method for Button
+    // Method for Buttons
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        switch(event.getAction()) {
-            case MotionEvent.ACTION_DOWN:   // pressed
-                hornIsActive = 1;
-                break;
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL: // released
-                hornIsActive = 0;
-                break;
-        }
+
+       switch(v.getId()) {
+           case R.id.buttonHornSemiMotion:  // Button Horn
+               switch (event.getAction()) {
+                   case MotionEvent.ACTION_DOWN:   // pressed
+                       hornIsActive = 1;
+                       break;
+                   case MotionEvent.ACTION_UP:
+                   case MotionEvent.ACTION_CANCEL: // released
+                       hornIsActive = 0;
+                       break;
+               }
+           case R.id.buttonCalibrationSemiMotion:   // Button Calibration
+               calibrateIsActive = true;
+       }
 
         // Send data
         send();
@@ -174,14 +182,17 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
     @Override
     public void onSensorChanged(SensorEvent event) {
 
-        // set Offset when seekBar is touched first
-        if (steeringIsStarted && steeringIsStartedFirst) {
+        // Calibration
+        if (calibrateIsActive) {
             positionSteeringOffset = event.values[1];
-            steeringIsStartedFirst = false;
+
+            // reset
+            calibrateIsActive = false;
         }
 
         // get sensor information and calculate output
         positionSteering = (event.values[1] - positionSteeringOffset);
+
 
         if (positionSteering < -5)
             positionSteering = 0;
@@ -215,7 +226,6 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
 
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
-        steeringIsStarted = true;
     }
 
     @Override
