@@ -35,12 +35,12 @@ public class ControlMotionActivity extends AppCompatActivity implements SensorEv
     SensorManager sensorManager;
     Sensor sensor;
 
-    // Buttons (Light and Horn)
+    // Buttons (Light, Horn and Calibration)
     Button buttonHornMotion;
     ToggleButton toggleButtonLightMotion;
     Button buttonCalibrationMotion;
 
-    // CheckBoxs (Change Axis and Limitation
+    // CheckBoxes (Change Axis and Limitation)
     CheckBox checkBoxChangeAxisMotion;
     CheckBox checkBoxLimitationMotion;
 
@@ -205,7 +205,6 @@ public class ControlMotionActivity extends AppCompatActivity implements SensorEv
             axis1 = event.values[1];
         }
 
-
         // Calibration
         if (calibrationIsActive) {
             positionSteeringOffset = axis1;
@@ -239,12 +238,12 @@ public class ControlMotionActivity extends AppCompatActivity implements SensorEv
         // Calculate correct steering
         //output = (input - input_start)*output_range / input_range + output_start;
 
-        // Limitation
+        // Limitation of Drive
         if (checkBoxLimitationMotion.isChecked()) {
             if (positionDrive <= 60)
                 positionDrive = 60;
-            else if (positionDrive >= 200)
-                positionDrive = 200;
+            else if (positionDrive >= 160)
+                positionDrive = 160;
         }
 
         // set current Steering
