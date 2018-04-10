@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -29,6 +30,7 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
     TextView textViewCurrentSteeringSemiMotion;
     SensorManager sensorManager;
     Sensor sensor;
+    float positionDrive;
     float positionSteering;
     float positionSteeringOffset;
 
@@ -36,6 +38,10 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
     Button buttonHornSemiMotion;
     ToggleButton toggleButtonLightSemiMotion;
     Button buttonCalibrationSemiMotion;
+
+    // CheckBoxes (Change Axis and Limitation)
+    CheckBox checkBoxChangeAxisSemiMotion;
+    CheckBox checkBoxLimitationSemiMotion;
 
     // Send data
     private SocketClient client = null;
@@ -45,7 +51,7 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
     byte[] data;
     int hornIsActive;
     int lightIsActive;
-    boolean calibrateIsActive;
+    boolean calibrationIsActive;
 
 
     @Override
@@ -82,12 +88,16 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
         buttonCalibrationSemiMotion = (Button) findViewById(R.id.buttonCalibrationSemiMotion);
         buttonCalibrationSemiMotion.setOnTouchListener(this);
 
+        // CheckBoxs (Change Axis and Limitation)
+        checkBoxChangeAxisSemiMotion = (CheckBox) findViewById(R.id.checkBoxChangeAxisSemiMotion);
+        checkBoxLimitationSemiMotion = (CheckBox) findViewById(R.id.checkBoxLimitationSemiMotion);
+
         // reset information
         positionSteering = 0;
         positionSteeringOffset = 0;
         hornIsActive = 0;
         lightIsActive = 0;
-        calibrateIsActive = false;
+        calibrationIsActive = false;
 
         // Send data output
         textViewSendSemiMotion = (TextView) findViewById(R.id.textViewSendSemiMotion);
@@ -129,7 +139,7 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
     // Send information
     public void send() {
         data = new byte[3];
-        data[0] = (byte) seekBarDrive.getProgress();
+        data[0] = (byte) positionDrive;
         data[1] = (byte) positionSteering;
         data[2] = (byte) (128 * lightIsActive + 64 * hornIsActive);
 
@@ -157,7 +167,7 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
                        break;
                }
            case R.id.buttonCalibrationSemiMotion:   // Button Calibration
-               calibrateIsActive = true;
+               calibrationIsActive = true;
        }
 
         // Send data
@@ -182,16 +192,26 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
     @Override
     public void onSensorChanged(SensorEvent event) {
 
-        // Calibration
-        if (calibrateIsActive) {
-            positionSteeringOffset = event.values[1];
+        //Change axis
+        float axis0, axis1;
+        if (checkBoxChangeAxisSemiMotion.isChecked()) {
+            // modified
+            axis1 = event.values[0];
+        } else {
+            // standard
+            axis1 = event.values[1];
+        }
+
+        // Calibration of Steering
+        if (calibrationIsActive) {
+            positionSteeringOffset = axis1;
 
             // reset
-            calibrateIsActive = false;
+            calibrationIsActive = false;
         }
 
         // get sensor information and calculate output
-        positionSteering = (event.values[1] - positionSteeringOffset);
+        positionSteering = (axis1 - positionSteeringOffset);
 
 
         if (positionSteering < -5)
@@ -220,8 +240,26 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
     // Methods for Drive (SeekBar)
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+        // Limitation of Drive
+        if (checkBoxLimitationSemiMotion.isChecked()) {
+            positionDrive = seekBarDrive.getProgress() * 61 / 256 + (127 - 30);
+
+            // change textView of Drive
+            textViewCurrentDriveSemiMotion.setText(Float.toString(positionDrive));
+
+        } else {
+            positionDrive = seekBarDrive.getProgress();
+
+            // change textView of Drive
+            textViewCurrentDriveSemiMotion.setText(Float.toString(positionDrive));
+        }
+
         // set current Drive
-        textViewCurrentDriveSemiMotion.setText(Integer.toString(progress));
+        //textViewCurrentDriveSemiMotion.setText(Integer.toString(progress));
+
+        // Send data
+        send();
     }
 
     @Override
@@ -234,7 +272,9 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
         seekBarDrive.setProgress(127);
 
         // send data
-        send();
+        for (int i=0;i<15;i++){
+            send();
+        }
     }
 
 

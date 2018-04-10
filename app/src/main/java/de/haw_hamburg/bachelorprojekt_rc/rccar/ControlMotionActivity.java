@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,19 +23,26 @@ public class ControlMotionActivity extends AppCompatActivity implements SensorEv
 
     // Drive (Gyro)
     TextView textViewCurrentDriveMotion;
-    float positionDriveMotion;
+    float positionDrive;
+    float positionDriveOffset;
 
     // Steering (Gyro)
     TextView textViewCurrentSteeringMotion;
-    float positionSteeringMotion;
+    float positionSteering;
+    float positionSteeringOffset;
 
     // Drive + Steering (Gyro)
     SensorManager sensorManager;
     Sensor sensor;
 
-    // Buttons (Light and Horn)
+    // Buttons (Light, Horn and Calibration)
     Button buttonHornMotion;
     ToggleButton toggleButtonLightMotion;
+    Button buttonCalibrationMotion;
+
+    // CheckBoxes (Change Axis and Limitation)
+    CheckBox checkBoxChangeAxisMotion;
+    CheckBox checkBoxLimitationMotion;
 
     // Send data
     private SocketClient client = null;
@@ -44,7 +52,7 @@ public class ControlMotionActivity extends AppCompatActivity implements SensorEv
     byte[] data;
     int hornIsActive;
     int lightIsActive;
-
+    boolean calibrationIsActive;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +67,7 @@ public class ControlMotionActivity extends AppCompatActivity implements SensorEv
 
         // Drive + Steering (Gyro)
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        if (sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null) {
+        if (sensorManager != null) {
             // accelerometer available
             sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
             sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
@@ -70,15 +78,26 @@ public class ControlMotionActivity extends AppCompatActivity implements SensorEv
             startActivity(intent);
         }
 
-        // Buttons (Light and Horn)
+        // Buttons (Light, Horn and Calibration)
         buttonHornMotion = (Button) findViewById(R.id.buttonHornMotion);
         buttonHornMotion.setOnTouchListener(this);
         ToggleButton toggleButtonLightMotion = (ToggleButton) findViewById(R.id.toggleButtonLightMotion);
         toggleButtonLightMotion.setOnCheckedChangeListener(this);
+        buttonCalibrationMotion = (Button) findViewById(R.id.buttonCalibrationMotion);
+        buttonCalibrationMotion.setOnTouchListener(this);
+
+        // CheckBoxes (Change Axis and Limitation)
+        checkBoxChangeAxisMotion = (CheckBox) findViewById(R.id.checkBoxChangeAxisMotion);
+        checkBoxLimitationMotion = (CheckBox) findViewById(R.id.checkBoxLimitationMotion);
 
         // Reset information
+        positionDrive = 0;
+        positionDriveOffset = 0;
+        positionSteering = 0;
+        positionSteeringOffset = 0;
         hornIsActive = 0;
         lightIsActive = 0;
+        calibrationIsActive = false;
 
         // Send data output
         textViewSendMotion = (TextView) findViewById(R.id.textViewSendMotion);
@@ -119,8 +138,8 @@ public class ControlMotionActivity extends AppCompatActivity implements SensorEv
     // Send information
     public void send() {
         data = new byte[3];
-        data[0] = (byte) positionDriveMotion;
-        data[1] = (byte) positionSteeringMotion;
+        data[0] = (byte) positionDrive;
+        data[1] = (byte) positionSteering;
         data[2] = (byte) (128 * lightIsActive + 64 * hornIsActive);
 
         // Output
@@ -135,15 +154,21 @@ public class ControlMotionActivity extends AppCompatActivity implements SensorEv
     // Method for Button
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        boolean performClick = v.performClick();
-        switch(event.getAction()) {
-            case MotionEvent.ACTION_DOWN:   // pressed
-                hornIsActive = 1;
-                break;
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL: // released
-                hornIsActive = 0;
-                break;
+
+        switch(v.getId()) {
+            case R.id.buttonHornMotion:     // Button Horn
+                boolean performClick = v.performClick();
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:   // pressed
+                        hornIsActive = 1;
+                        break;
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL: // released
+                        hornIsActive = 0;
+                        break;
+                }
+            case R.id.buttonCalibrationMotion:  // Button Calibration
+                calibrationIsActive = true;
         }
 
         // Sending data
@@ -168,34 +193,63 @@ public class ControlMotionActivity extends AppCompatActivity implements SensorEv
     @Override
     public void onSensorChanged(SensorEvent event) {
 
-        // get sensor information and calculate steering
-        positionSteeringMotion = event.values[1];
+        //Change axis
+        float axis0, axis1;
+        if (checkBoxChangeAxisMotion.isChecked()) {
+            // modified
+            axis0 = event.values[1];
+            axis1 = event.values[0];
+        } else {
+            // standard
+            axis0 = event.values[0];
+            axis1 = event.values[1];
+        }
 
-        if (positionSteeringMotion < -5)
-            positionSteeringMotion = 0;
-        else if (positionSteeringMotion > 5)
-            positionSteeringMotion = 255;
+        // Calibration
+        if (calibrationIsActive) {
+            positionSteeringOffset = axis1;
+            positionDriveOffset = axis0;
+
+            // reset
+            calibrationIsActive = false;
+        }
+
+        // get sensor information and calculate steering
+        positionSteering = axis1 - positionSteeringOffset;
+
+        if (positionSteering < -5)
+            positionSteering = 0;
+        else if (positionSteering > 5)
+            positionSteering = 255;
         else
-            positionSteeringMotion = Math.round((positionSteeringMotion + 5) * 256 / 10);
+            positionSteering = Math.round((positionSteering + 5) * 256 / 10);
+
 
         // get sensor information and calculate drive
-        positionDriveMotion = -event.values[0];
+        positionDrive = -axis0 + positionDriveOffset;
 
-        if (positionDriveMotion < -7)
-            positionDriveMotion = 0;
-        else if (positionDriveMotion > 3)
-            positionDriveMotion = 255;
+        if (positionDrive < -5)
+            positionDrive = 0;
+        else if (positionDrive > 5)
+            positionDrive = 255;
         else
-            positionDriveMotion = Math.round((positionDriveMotion + 7) * 256 / 10);
+            positionDrive = Math.round((positionDrive + 5) * 256 / 10);
 
-        // Calculate correct steering
-        //output = (input - input_start)*output_range / input_range + output_start;
+        // Limitation of Drive
+        if (checkBoxLimitationMotion.isChecked()) {
+            positionDrive = Math.round(positionDrive * 61 / 256 + (127 - 30));
+        }
+
+        // Calculate formula
+        // output = (input - input_start)*output_range / input_range + output_start;
+
+
 
         // set current Steering
-        textViewCurrentSteeringMotion.setText(String.format("%s", Float.toString(positionSteeringMotion)));
+        textViewCurrentSteeringMotion.setText(String.format("%s", Float.toString(positionSteering)));
 
         // set current drive
-        textViewCurrentDriveMotion.setText(String.format("%s", Float.toString(positionDriveMotion)));
+        textViewCurrentDriveMotion.setText(String.format("%s", Float.toString(positionDrive)));
 
         // send data
         send();
