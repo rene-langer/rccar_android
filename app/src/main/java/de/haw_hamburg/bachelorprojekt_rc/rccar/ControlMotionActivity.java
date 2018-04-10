@@ -86,7 +86,7 @@ public class ControlMotionActivity extends AppCompatActivity implements SensorEv
         buttonCalibrationMotion = (Button) findViewById(R.id.buttonCalibrationMotion);
         buttonCalibrationMotion.setOnTouchListener(this);
 
-        // CheckBoxs (Change Axis and Limitation)
+        // CheckBoxes (Change Axis and Limitation)
         checkBoxChangeAxisMotion = (CheckBox) findViewById(R.id.checkBoxChangeAxisMotion);
         checkBoxLimitationMotion = (CheckBox) findViewById(R.id.checkBoxLimitationMotion);
 
