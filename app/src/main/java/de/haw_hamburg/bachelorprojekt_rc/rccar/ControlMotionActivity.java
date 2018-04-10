@@ -67,7 +67,7 @@ public class ControlMotionActivity extends AppCompatActivity implements SensorEv
 
         // Drive + Steering (Gyro)
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        if (sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null) {
+        if (sensorManager != null) {
             // accelerometer available
             sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
             sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
@@ -235,16 +235,15 @@ public class ControlMotionActivity extends AppCompatActivity implements SensorEv
         else
             positionDrive = Math.round((positionDrive + 5) * 256 / 10);
 
-        // Calculate correct steering
-        //output = (input - input_start)*output_range / input_range + output_start;
-
         // Limitation of Drive
         if (checkBoxLimitationMotion.isChecked()) {
-            if (positionDrive <= 60)
-                positionDrive = 60;
-            else if (positionDrive >= 160)
-                positionDrive = 160;
+            positionDrive = Math.round(positionDrive * 61 / 256 + (127 - 30));
         }
+
+        // Calculate formula
+        // output = (input - input_start)*output_range / input_range + output_start;
+
+
 
         // set current Steering
         textViewCurrentSteeringMotion.setText(String.format("%s", Float.toString(positionSteering)));
