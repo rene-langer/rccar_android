@@ -109,20 +109,40 @@
         android:id="@+id/toggleButtonLightSemiMotion"
         android:layout_width="95dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="164dp"
+        android:layout_marginTop="12dp"
         android:checked="false"
         android:textOff="@string/lightOff"
         android:textOn="@string/lightOn"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonHornSemiMotion" />
 
     <Button
         android:id="@+id/buttonCalibrationSemiMotion"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="160dp"
+        android:layout_marginTop="12dp"
         android:text="@string/calibrate"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/toggleButtonLightSemiMotion" />
+
+    <CheckBox
+        android:id="@+id/checkBoxChangeAxisSemiMotion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="Change Axis"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/checkBoxLimitationSemiMotion" />
+
+    <CheckBox
+        android:id="@+id/checkBoxLimitationSemiMotion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="Limitation"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonCalibrationSemiMotion" />
 
 </android.support.constraint.ConstraintLayout>
