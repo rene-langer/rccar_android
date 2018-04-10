@@ -1,3 +1,13 @@
 <resources>
-    <string name="app_name">RCCar</string>
+    <string name="app_name">RC Car Remote Control</string>
+    <string name="forward">Forward</string>
+    <string name="backward">Backward</string>
+    <string name="left">Left</string>
+    <string name="right">Right</string>
+    <string name="horn">Horn</string>
+    <string name="calibrate">Calibrate</string>
+    <string name="lightOff">light off</string>
+    <string name="lightOn">light on</string>
+    <string name="initValue">127</string>
+    <string name="initInfo">Information: data[0]: 0x7f - data[1]: 0x7f - data[2]: 0x00</string>
 </resources>
