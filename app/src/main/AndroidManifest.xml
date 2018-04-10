@@ -2,10 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.haw_hamburg.bachelorprojekt_rc.rccar">
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"></uses-permission>
-    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
 
     <application
         android:allowBackup="true"
@@ -17,7 +17,7 @@
 
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="landscape">
+            android:screenOrientation="sensorLandscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -27,19 +27,19 @@
         <activity
             android:name=".ControlMotionActivity"
             android:parentActivityName=".MainActivity"
-            android:screenOrientation="landscape">
+            android:screenOrientation="sensorLandscape">
         </activity>
 
         <activity
             android:name=".ControlSemiMotionActivity"
             android:parentActivityName=".MainActivity"
-            android:screenOrientation="landscape">
+            android:screenOrientation="sensorLandscape">
         </activity>
 
         <activity
             android:name=".ControlSliderActivity"
             android:parentActivityName=".MainActivity"
-            android:screenOrientation="landscape">
+            android:screenOrientation="sensorLandscape">
         </activity>
     </application>
 

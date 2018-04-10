@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ public class ControlSliderActivity extends AppCompatActivity implements SeekBar.
     // Drive (SeekBar)
     SeekBar seekBarDrive;
     TextView textViewCurrentDrive;
+    float positionDrive;
 
     // Steering (SeekBar)
     SeekBar seekkBarSteering;
@@ -25,6 +27,9 @@ public class ControlSliderActivity extends AppCompatActivity implements SeekBar.
     // Buttons (Light and Horn)
     Button buttonHornSlider;
     ToggleButton toggleButtonLightSlider;
+
+    // CheckBoxes (Limitation)
+    CheckBox checkBoxLimitationSlider;
 
     // Send data
     private SocketClient client = null;
@@ -56,6 +61,9 @@ public class ControlSliderActivity extends AppCompatActivity implements SeekBar.
         buttonHornSlider.setOnTouchListener(this);
         ToggleButton toggleButtonLightSlider = (ToggleButton) findViewById(R.id.toggleButtonLightSlider);
         toggleButtonLightSlider.setOnCheckedChangeListener(this);
+
+        // CheckBoxs (Limitation)
+        checkBoxLimitationSlider = (CheckBox) findViewById(R.id.checkBoxLimitationSlider);
 
         // Reset information
         hornIsActive = 0;
@@ -141,7 +149,18 @@ public class ControlSliderActivity extends AppCompatActivity implements SeekBar.
         switch (seekBar.getId()){
             case R.id.seekBarDrive:
                 // set current Drive
-                textViewCurrentDrive.setText(Integer.toString(progress));
+                // Limitation of Drive
+                if (checkBoxLimitationSlider.isChecked()) {
+                    positionDrive = seekBarDrive.getProgress() * 61 / 256 + (127 - 30);
+
+                    // change textView of Drive
+                    textViewCurrentDrive.setText(Float.toString(positionDrive));
+                } else {
+                    positionDrive = seekBarDrive.getProgress();
+
+                    // change textView of Drive
+                    textViewCurrentDrive.setText(Float.toString(positionDrive));
+                }
                 break;
             case  R.id.seekBarSteering:
                 // set current Steering
