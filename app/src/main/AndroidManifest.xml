@@ -17,7 +17,7 @@
 
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="sensorLandscape">
+            android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -27,19 +27,19 @@
         <activity
             android:name=".ControlMotionActivity"
             android:parentActivityName=".MainActivity"
-            android:screenOrientation="sensorLandscape">
+            android:screenOrientation="landscape">
         </activity>
 
         <activity
             android:name=".ControlSemiMotionActivity"
             android:parentActivityName=".MainActivity"
-            android:screenOrientation="sensorLandscape">
+            android:screenOrientation="landscape">
         </activity>
 
         <activity
             android:name=".ControlSliderActivity"
             android:parentActivityName=".MainActivity"
-            android:screenOrientation="sensorLandscape">
+            android:screenOrientation="landscape">
         </activity>
     </application>
 

@@ -90,23 +90,27 @@ public class ControlMotionActivity extends AppCompatActivity implements SensorEv
         checkBoxChangeAxisMotion = (CheckBox) findViewById(R.id.checkBoxChangeAxisMotion);
         checkBoxLimitationMotion = (CheckBox) findViewById(R.id.checkBoxLimitationMotion);
 
-        // Reset information
-        positionDrive = 0;
-        positionDriveOffset = 0;
-        positionSteering = 0;
-        positionSteeringOffset = 0;
-        hornIsActive = 0;
-        lightIsActive = 0;
-        calibrationIsActive = false;
-
         // Send data output
         textViewSendMotion = (TextView) findViewById(R.id.textViewSendMotion);
     }
 
+
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onStart() {
+        super.onStart();
+
         sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+
+        // reset information
+        positionSteering = 127;
+        positionSteeringOffset = 0;
+        positionDrive = 127;
+        positionDriveOffset = 0;
+        hornIsActive = 0;
+        lightIsActive = 0;
+        calibrationIsActive = false;
+        checkBoxChangeAxisMotion.setActivated(false);
+        checkBoxLimitationMotion.setActivated(false);
 
         // Connect to server
         if(client == null || !client.isConnected()) {
@@ -116,6 +120,9 @@ public class ControlMotionActivity extends AppCompatActivity implements SensorEv
         else {
             Log.e("Connect", "Already connected to server");
         }
+
+        // send inti
+        send();
     }
 
     @Override

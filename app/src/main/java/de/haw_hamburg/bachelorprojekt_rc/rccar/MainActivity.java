@@ -18,7 +18,6 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     Button buttonConnect, buttonMotion, buttonSemiMotion, buttonSlider;
     TextView textViewConnected;
-    String ssid;
 
 
     @Override

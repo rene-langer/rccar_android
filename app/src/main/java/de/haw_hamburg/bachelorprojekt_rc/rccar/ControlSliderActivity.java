@@ -1,5 +1,4 @@
 package de.haw_hamburg.bachelorprojekt_rc.rccar;
-import android.hardware.SensorManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,7 +20,7 @@ public class ControlSliderActivity extends AppCompatActivity implements SeekBar.
     float positionDrive;
 
     // Steering (SeekBar)
-    SeekBar seekkBarSteering;
+    SeekBar seekBarSteering;
     TextView textViewCurrentSteering;
 
     // Buttons (Light and Horn)
@@ -53,8 +52,8 @@ public class ControlSliderActivity extends AppCompatActivity implements SeekBar.
 
         // Steering (SeekBar)
         textViewCurrentSteering = (TextView)findViewById(R.id.textViewCurrentSterring);
-        seekkBarSteering = (SeekBar)findViewById(R.id.seekBarSteering);
-        seekkBarSteering.setOnSeekBarChangeListener(this);
+        seekBarSteering = (SeekBar)findViewById(R.id.seekBarSteering);
+        seekBarSteering.setOnSeekBarChangeListener(this);
 
         // Buttons (Light and Horn)
         buttonHornSlider = (Button) findViewById(R.id.buttonHornSlider);
@@ -65,17 +64,19 @@ public class ControlSliderActivity extends AppCompatActivity implements SeekBar.
         // CheckBoxs (Limitation)
         checkBoxLimitationSlider = (CheckBox) findViewById(R.id.checkBoxLimitationSlider);
 
-        // Reset information
-        hornIsActive = 0;
-        lightIsActive = 0;
-
         // Send data output
         textViewSendSlider = (TextView) findViewById(R.id.textViewSendSlider);
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onStart() {
+        super.onStart();
+
+        // reset information
+        positionDrive = 127;
+        hornIsActive = 0;
+        lightIsActive = 0;
+        checkBoxLimitationSlider.setActivated(false);
 
         // Connect to server
         if(client == null || !client.isConnected()) {
@@ -85,6 +86,9 @@ public class ControlSliderActivity extends AppCompatActivity implements SeekBar.
         else {
             Log.e("Connect", "Already connected to server");
         }
+
+        // send init
+        send();
     }
 
     @Override
@@ -99,8 +103,8 @@ public class ControlSliderActivity extends AppCompatActivity implements SeekBar.
     // Send information
     public void send() {
         data = new byte[3];
-        data[0] = (byte) seekBarDrive.getProgress();
-        data[1] = (byte) seekkBarSteering.getProgress();
+        data[0] = (byte) positionDrive;
+        data[1] = (byte) seekBarSteering.getProgress();
         data[2] = (byte) (128 * lightIsActive + 64 * hornIsActive);
 
         // Output
@@ -183,7 +187,7 @@ public class ControlSliderActivity extends AppCompatActivity implements SeekBar.
                 break;
             case  R.id.seekBarSteering:
                 // reset progress
-                seekkBarSteering.setProgress(127);
+                seekBarSteering.setProgress(127);
                 break;
             default:
                 break;

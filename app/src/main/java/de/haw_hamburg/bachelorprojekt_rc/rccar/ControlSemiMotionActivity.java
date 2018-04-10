@@ -25,12 +25,12 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
     // Drive (SeekBar)
     TextView textViewCurrentDriveSemiMotion;
     SeekBar seekBarDrive;
+    float positionDrive;
 
     // Steering (Gyro)
     TextView textViewCurrentSteeringSemiMotion;
     SensorManager sensorManager;
     Sensor sensor;
-    float positionDrive;
     float positionSteering;
     float positionSteeringOffset;
 
@@ -92,21 +92,25 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
         checkBoxChangeAxisSemiMotion = (CheckBox) findViewById(R.id.checkBoxChangeAxisSemiMotion);
         checkBoxLimitationSemiMotion = (CheckBox) findViewById(R.id.checkBoxLimitationSemiMotion);
 
-        // reset information
-        positionSteering = 0;
-        positionSteeringOffset = 0;
-        hornIsActive = 0;
-        lightIsActive = 0;
-        calibrationIsActive = false;
-
         // Send data output
         textViewSendSemiMotion = (TextView) findViewById(R.id.textViewSendSemiMotion);
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onStart() {
+        super.onStart();
+
         sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+
+        // reset information
+        positionSteering = 127;
+        positionSteeringOffset = 0;
+        positionDrive = 127;
+        hornIsActive = 0;
+        lightIsActive = 0;
+        calibrationIsActive = false;
+        checkBoxChangeAxisSemiMotion.setActivated(false);
+        checkBoxLimitationSemiMotion.setActivated(false);
 
         // Connect to server
         if(client == null || !client.isConnected()) {
@@ -116,6 +120,9 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
         else {
             Log.e("Connect", "Already connected to server");
         }
+
+        // send init
+        send();
     }
 
     @Override
