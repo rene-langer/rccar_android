@@ -35,10 +35,6 @@
             android:name=".ControlSliderActivity"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="landscape"></activity>
-        <activity
-            android:name=".CameraActivity"
-            android:parentActivityName=".MainActivity"
-            android:screenOrientation="landscape"></activity>
     </application>
 
 </manifest>

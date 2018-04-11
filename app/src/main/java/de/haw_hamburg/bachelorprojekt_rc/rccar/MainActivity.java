@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    Button buttonConnect, buttonMotion, buttonSemiMotion, buttonSlider, buttonCamera;
+    Button buttonConnect, buttonMotion, buttonSemiMotion, buttonSlider;
     TextView textViewConnected;
 
 
@@ -34,9 +34,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         buttonSemiMotion.setOnClickListener(this);
         buttonSlider = (Button)findViewById(R.id.buttonControlSlider);
         buttonSlider.setOnClickListener(this);
-        buttonCamera = (Button)findViewById(R.id.buttonCamera);
-        buttonCamera.setOnClickListener(this);
-
 
         // Connection information
         textViewConnected = (TextView)findViewById(R.id.textViewConnected);
@@ -90,11 +87,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 // go to ControlSemiMotionActivity
                 Intent intentControlSemiMotion = new Intent(this, ControlSemiMotionActivity.class);
                 startActivity(intentControlSemiMotion);
-                break;
-            case R.id.buttonCamera:
-                // go to CameraActivity
-                Intent intentCamera = new Intent(this, CameraActivity.class);
-                startActivity(intentCamera);
                 break;
         }
     }
