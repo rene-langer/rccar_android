@@ -3,6 +3,7 @@ package de.haw_hamburg.bachelorprojekt_rc.rccar;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.DhcpInfo;
 import android.net.wifi.SupplicantState;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -36,18 +37,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // Connection information
         textViewConnected = (TextView)findViewById(R.id.textViewConnected);
-
         WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        WifiInfo wifiInfo;
+        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+        DhcpInfo dhcpInfo = wifiManager.getDhcpInfo();
 
-        wifiInfo = wifiManager.getConnectionInfo();
         if (wifiInfo.getSupplicantState() == SupplicantState.COMPLETED) {
             if (wifiInfo.getSSID().equals("\"RCCar\""))
-                textViewConnected.setText("Status: Connected to " + wifiInfo.getSSID() + "!");
+                textViewConnected.setText("Status: Connected to " + wifiInfo.getSSID() + "(" + dhcpInfo.ipAddress + ")" + "!");
             else
                 textViewConnected.setText("Status: Not connected!");
         }
-
     }
 
     @Override
@@ -56,16 +55,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // update Connection information
         WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        WifiInfo wifiInfo;
+        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+        DhcpInfo dhcpInfo = wifiManager.getDhcpInfo();
 
-        wifiInfo = wifiManager.getConnectionInfo();
         if (wifiInfo.getSupplicantState() == SupplicantState.COMPLETED) {
             if (wifiInfo.getSSID().equals("\"RCCar\""))
-                textViewConnected.setText("Status: Connected to " + wifiInfo.getSSID() + "!");
+                textViewConnected.setText("Status: Connected to " + wifiInfo.getSSID() + "(" + dhcpInfo.ipAddress + ")" + "!");
             else
                 textViewConnected.setText("Status: Not connected!");
         }
-
     }
 
     @Override

@@ -74,8 +74,7 @@
         android:id="@+id/buttonControlSlider"
         android:layout_width="100dp"
         android:layout_height="78dp"
-        android:layout_marginBottom="73dp"
-        android:layout_marginLeft="0dp"
+        android:layout_marginBottom="68dp"
         android:text="Slider Control"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/textView_header" />
