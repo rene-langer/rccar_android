@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    Button buttonConnect, buttonMotion, buttonSemiMotion, buttonSlider;
+    Button buttonConnect, buttonMotion, buttonSemiMotion, buttonSlider, buttonCamera;
     TextView textViewConnected;
 
 
@@ -34,21 +34,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         buttonSemiMotion.setOnClickListener(this);
         buttonSlider = (Button)findViewById(R.id.buttonControlSlider);
         buttonSlider.setOnClickListener(this);
+        buttonCamera = (Button)findViewById(R.id.buttonCamera);
+        buttonCamera.setOnClickListener(this);
+
 
         // Connection information
         textViewConnected = (TextView)findViewById(R.id.textViewConnected);
-
         WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        WifiInfo wifiInfo;
+        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+        DhcpInfo dhcpInfo = wifiManager.getDhcpInfo();
 
-        wifiInfo = wifiManager.getConnectionInfo();
         if (wifiInfo.getSupplicantState() == SupplicantState.COMPLETED) {
             if (wifiInfo.getSSID().equals("\"RCCar\""))
-                textViewConnected.setText("Status: Connected to " + wifiInfo.getSSID() + "!");
+                textViewConnected.setText("Status: Connected to " + wifiInfo.getSSID() + "(" + dhcpInfo.ipAddress + ")" + "!");
             else
                 textViewConnected.setText("Status: Not connected!");
         }
-
     }
 
     @Override
@@ -89,6 +90,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 // go to ControlSemiMotionActivity
                 Intent intentControlSemiMotion = new Intent(this, ControlSemiMotionActivity.class);
                 startActivity(intentControlSemiMotion);
+                break;
+            case R.id.buttonCamera:
+                // go to CameraActivity
+                Intent intentCamera = new Intent(this, CameraActivity.class);
+                startActivity(intentCamera);
                 break;
         }
     }
