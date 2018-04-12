@@ -6,6 +6,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,12 +15,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 
-public class ControlMotionActivity extends AppCompatActivity implements SensorEventListener, CompoundButton.OnCheckedChangeListener, Button.OnTouchListener, MessageReceivedListener {
+public class ControlMotionActivity extends AppCompatActivity implements SensorEventListener, Button.OnTouchListener, MessageReceivedListener {
 
     // Drive (Gyro)
     TextView textViewCurrentDriveMotion;
@@ -36,9 +37,9 @@ public class ControlMotionActivity extends AppCompatActivity implements SensorEv
     Sensor sensor;
 
     // Buttons (Light, Horn and Calibration)
-    Button buttonHornMotion;
-    ToggleButton toggleButtonLightMotion;
-    Button buttonCalibrationMotion;
+    ImageButton imageButtonHornMotion;
+    ImageButton imageButtonLightMotion;
+    ImageButton imageButtonCalibrationMotion;
 
     // CheckBoxes (Change Axis and Limitation)
     CheckBox checkBoxChangeAxisMotion;
@@ -79,12 +80,12 @@ public class ControlMotionActivity extends AppCompatActivity implements SensorEv
         }
 
         // Buttons (Light, Horn and Calibration)
-        buttonHornMotion = (Button) findViewById(R.id.buttonHornMotion);
-        buttonHornMotion.setOnTouchListener(this);
-        ToggleButton toggleButtonLightMotion = (ToggleButton) findViewById(R.id.toggleButtonLightMotion);
-        toggleButtonLightMotion.setOnCheckedChangeListener(this);
-        buttonCalibrationMotion = (Button) findViewById(R.id.buttonCalibrationMotion);
-        buttonCalibrationMotion.setOnTouchListener(this);
+        imageButtonHornMotion = (ImageButton) findViewById(R.id.imageButtonHornMotion);
+        imageButtonHornMotion.setOnTouchListener(this);
+        imageButtonLightMotion = (ImageButton) findViewById(R.id.imageButtonLightMotion);
+        imageButtonLightMotion.setOnTouchListener(this);
+        imageButtonCalibrationMotion = (ImageButton) findViewById(R.id.imageButtonCalibrationMotion);
+        imageButtonCalibrationMotion.setOnTouchListener(this);
 
         // CheckBoxes (Change Axis and Limitation)
         checkBoxChangeAxisMotion = (CheckBox) findViewById(R.id.checkBoxChangeAxisMotion);
@@ -93,7 +94,6 @@ public class ControlMotionActivity extends AppCompatActivity implements SensorEv
         // Send data output
         textViewSendMotion = (TextView) findViewById(R.id.textViewSendMotion);
     }
-
 
     @Override
     public void onStart() {
@@ -109,8 +109,8 @@ public class ControlMotionActivity extends AppCompatActivity implements SensorEv
         hornIsActive = 0;
         lightIsActive = 0;
         calibrationIsActive = false;
-        checkBoxChangeAxisMotion.setActivated(false);
-        checkBoxLimitationMotion.setActivated(false);
+        checkBoxChangeAxisMotion.setChecked(false);
+        checkBoxLimitationMotion.setChecked(true);
 
         // Connect to server
         if(client == null || !client.isConnected()) {
@@ -163,36 +163,56 @@ public class ControlMotionActivity extends AppCompatActivity implements SensorEv
     public boolean onTouch(View v, MotionEvent event) {
 
         switch(v.getId()) {
-            case R.id.buttonHornMotion:     // Button Horn
+            case R.id.imageButtonHornMotion:     // ImageButton Horn
                 boolean performClick = v.performClick();
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:   // pressed
                         hornIsActive = 1;
+                        imageButtonHornMotion.setImageResource(R.mipmap.signal_horn_on);
                         break;
                     case MotionEvent.ACTION_UP:
                     case MotionEvent.ACTION_CANCEL: // released
                         hornIsActive = 0;
+                        imageButtonHornMotion.setImageResource(R.mipmap.signal_horn_off);
                         break;
                 }
-            case R.id.buttonCalibrationMotion:  // Button Calibration
+                break;
+
+            case R.id.imageButtonCalibrationMotion:  // ImageButton Calibration
                 calibrationIsActive = true;
+                imageButtonCalibrationMotion.setImageResource(R.mipmap.calibration_on);
+
+                // timer after clicked calibration button
+                new CountDownTimer(400, 400) {
+                    public void onFinish() {
+                        imageButtonCalibrationMotion.setImageResource(R.mipmap.calibration_off);
+                    }
+
+                    public void onTick(long millisUntilFinished) {
+                        // millisUntilFinished    The amount of time until finished.
+                    }
+                }.start();
+
+                break;
+
+            case R.id.imageButtonLightMotion:   // ImageButton Light
+                // Light on
+                if (lightIsActive == 0 && (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL)) {
+                    lightIsActive = 1;
+                    imageButtonLightMotion.setImageResource(R.mipmap.light_bulb_on);
+                    break;
+
+                // Light off
+                } else if (lightIsActive == 1 && (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL)) {
+                    lightIsActive = 0;
+                    imageButtonLightMotion.setImageResource(R.mipmap.light_bulb_off);
+                    break;
+                }
         }
 
         // Sending data
         send();
         return false;
-    }
-
-
-    // Method for ToggleButton
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if (isChecked)  // enabled
-            lightIsActive = 1;
-        else    // disabled
-            lightIsActive = 0;
-
-        // Sending data
-        send();
     }
 
 

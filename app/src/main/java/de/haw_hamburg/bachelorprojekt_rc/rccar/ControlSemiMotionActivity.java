@@ -6,7 +6,10 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+
 import android.net.Uri;
+import android.os.CountDownTimer;
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,16 +17,20 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+
 import android.widget.CompoundButton;
 import android.widget.MediaController;
 import android.widget.SeekBar;
-import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 import android.widget.VideoView;
 
+import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.Toast;
 
-public class ControlSemiMotionActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, SensorEventListener, CompoundButton.OnCheckedChangeListener, Button.OnTouchListener, MessageReceivedListener {
+
+
+public class ControlSemiMotionActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, SensorEventListener, Button.OnTouchListener, MessageReceivedListener {
 
     // Drive (SeekBar)
     TextView textViewCurrentDriveSemiMotion;
@@ -38,9 +45,9 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
     float positionSteeringOffset;
 
     // Buttons (Light, Horn and Calibration)
-    Button buttonHornSemiMotion;
-    ToggleButton toggleButtonLightSemiMotion;
-    Button buttonCalibrationSemiMotion;
+    ImageButton imageButtonHornSemiMotion;
+    ImageButton imageButtonLightSemiMotion;
+    ImageButton imageButtonCalibrationSemiMotion;
 
     // CheckBoxes (Change Axis and Limitation)
     CheckBox checkBoxChangeAxisSemiMotion;
@@ -89,12 +96,12 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
         }
 
         // Buttons (Light, Horn and Calibration)
-        buttonHornSemiMotion = (Button) findViewById(R.id.buttonHornSemiMotion);
-        buttonHornSemiMotion.setOnTouchListener(this);
-        ToggleButton toggleButtonLightSemiMotion = (ToggleButton) findViewById(R.id.toggleButtonLightSemiMotion);
-        toggleButtonLightSemiMotion.setOnCheckedChangeListener(this);
-        buttonCalibrationSemiMotion = (Button) findViewById(R.id.buttonCalibrationSemiMotion);
-        buttonCalibrationSemiMotion.setOnTouchListener(this);
+        imageButtonHornSemiMotion = (ImageButton) findViewById(R.id.imageButtonHornSemiMotion);
+        imageButtonHornSemiMotion.setOnTouchListener(this);
+        imageButtonLightSemiMotion = (ImageButton) findViewById(R.id.imageButtonLightSemiMotion);
+        imageButtonLightSemiMotion.setOnTouchListener(this);
+        imageButtonCalibrationSemiMotion = (ImageButton) findViewById(R.id.imageButtonCalibrationSemiMotion);
+        imageButtonCalibrationSemiMotion.setOnTouchListener(this);
 
         // CheckBoxs (Change Axis and Limitation)
         checkBoxChangeAxisSemiMotion = (CheckBox) findViewById(R.id.checkBoxChangeAxisSemiMotion);
@@ -120,8 +127,8 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
         hornIsActive = 0;
         lightIsActive = 0;
         calibrationIsActive = false;
-        checkBoxChangeAxisSemiMotion.setActivated(false);
-        checkBoxLimitationSemiMotion.setActivated(false);
+        checkBoxChangeAxisSemiMotion.setChecked(false);
+        checkBoxLimitationSemiMotion.setChecked(true);
 
         // Connect to server
         if(client == null || !client.isConnected()) {
@@ -173,6 +180,7 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
         sendByteInstruction(data);
     }
 
+
     // play camera stream
     private void playStream(String ip){
         String address = "http://"+ip+":8090";
@@ -193,36 +201,57 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
     @Override
     public boolean onTouch(View v, MotionEvent event) {
 
-       switch(v.getId()) {
-           case R.id.buttonHornSemiMotion:  // Button Horn
-               switch (event.getAction()) {
-                   case MotionEvent.ACTION_DOWN:   // pressed
-                       hornIsActive = 1;
-                       break;
-                   case MotionEvent.ACTION_UP:
-                   case MotionEvent.ACTION_CANCEL: // released
-                       hornIsActive = 0;
-                       break;
-               }
-           case R.id.buttonCalibrationSemiMotion:   // Button Calibration
-               calibrationIsActive = true;
-       }
+        switch(v.getId()) {
+            case R.id.imageButtonHornSemiMotion:     // ImageButton Horn
+                boolean performClick = v.performClick();
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:   // pressed
+                        hornIsActive = 1;
+                        imageButtonHornSemiMotion.setImageResource(R.mipmap.signal_horn_on);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL: // released
+                        hornIsActive = 0;
+                        imageButtonHornSemiMotion.setImageResource(R.mipmap.signal_horn_off);
+                        break;
+                }
+                break;
 
-        // Send data
+            case R.id.imageButtonCalibrationSemiMotion:  // ImageButton Calibration
+                calibrationIsActive = true;
+                imageButtonCalibrationSemiMotion.setImageResource(R.mipmap.calibration_on);
+
+                // timer after clicked calibration button
+                new CountDownTimer(400, 400) {
+                    public void onFinish() {
+                        imageButtonCalibrationSemiMotion.setImageResource(R.mipmap.calibration_off);
+                    }
+
+                    public void onTick(long millisUntilFinished) {
+                        // millisUntilFinished    The amount of time until finished.
+                    }
+                }.start();
+
+                break;
+
+            case R.id.imageButtonLightSemiMotion:   // ImageButton Light
+                // Light on
+                if (lightIsActive == 0 && (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL)) {
+                    lightIsActive = 1;
+                    imageButtonLightSemiMotion.setImageResource(R.mipmap.light_bulb_on);
+                    break;
+
+                // Light off
+                } else if (lightIsActive == 1 && (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL)) {
+                    lightIsActive = 0;
+                    imageButtonLightSemiMotion.setImageResource(R.mipmap.light_bulb_off);
+                    break;
+                }
+        }
+
+        // Sending data
         send();
         return false;
-    }
-
-
-    // Method for ToggleButton
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if (isChecked)  // enabled
-            lightIsActive = 1;
-        else    // disabled
-            lightIsActive = 0;
-
-        // Send data
-        send();
     }
 
 

@@ -16,6 +16,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
+            android:label="RC Car Control-Center"
             android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,14 +26,17 @@
         </activity>
         <activity
             android:name=".ControlMotionActivity"
+            android:label="Motion Control"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="landscape"></activity>
         <activity
             android:name=".ControlSemiMotionActivity"
+            android:label="Semi-Motion Control"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="landscape"></activity>
         <activity
             android:name=".ControlSliderActivity"
+            android:label="Slider Control"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="landscape"></activity>
     </application>

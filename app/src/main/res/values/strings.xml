@@ -11,4 +11,6 @@
     <string name="initValue">127</string>
     <string name="initInfo">Information: data[0]: 0x7f - data[1]: 0x7f - data[2]: 0x00</string>
     <string name="limitation">Limitation</string>
+    <string name="changeAxis">Change Axis</string>
+    <string name="icon">Icon</string>
 </resources>

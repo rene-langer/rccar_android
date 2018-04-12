@@ -24,6 +24,7 @@
         android:thumbOffset="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/textViewBackward"
+        app:layout_constraintHorizontal_bias="0.39"
         app:layout_constraintStart_toStartOf="@+id/textViewBackward"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.498"
@@ -49,8 +50,9 @@
         android:id="@+id/textViewSendSemiMotion"
         android:layout_width="wrap_content"
         android:layout_height="20dp"
-        android:layout_marginStart="124dp"
-        android:layout_marginTop="32dp"
+
+        android:layout_marginStart="72dp"
+
         android:text="@string/initInfo"
         android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent"
@@ -63,6 +65,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginTop="16dp"
         android:text="@string/forward"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="@+id/textViewBackward"
         app:layout_constraintStart_toStartOf="@+id/textViewBackward"
         app:layout_constraintTop_toTopOf="parent"
@@ -76,6 +79,7 @@
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="24dp"
         android:text="@string/backward"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         tools:layout_constraintBottom_creator="1"
@@ -98,42 +102,11 @@
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintTop_creator="1" />
 
-    <Button
-        android:id="@+id/buttonHornSemiMotion"
-        android:layout_width="95dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="@string/horn"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ToggleButton
-        android:id="@+id/toggleButtonLightSemiMotion"
-        android:layout_width="95dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:checked="false"
-        android:textOff="@string/lightOff"
-        android:textOn="@string/lightOn"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonHornSemiMotion" />
-
-    <Button
-        android:id="@+id/buttonCalibrationSemiMotion"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:text="@string/calibrate"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toggleButtonLightSemiMotion" />
-
     <CheckBox
         android:id="@+id/checkBoxChangeAxisSemiMotion"
-        android:layout_width="wrap_content"
+        android:layout_width="105dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:text="Change Axis"
+        android:text="@string/changeAxis"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/checkBoxLimitationSemiMotion" />
 
@@ -141,11 +114,40 @@
         android:id="@+id/checkBoxLimitationSemiMotion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:text="Limitation"
+        android:text="@string/limitation"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonCalibrationSemiMotion" />
+        app:layout_constraintTop_toBottomOf="@+id/imageButtonHornSemiMotion" />
+
+    <ImageButton
+        android:id="@+id/imageButtonLightSemiMotion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@android:color/transparent"
+        android:contentDescription="@string/icon"
+        android:src="@mipmap/light_bulb_off"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageButtonCalibrationSemiMotion" />
+
+    <ImageButton
+        android:id="@+id/imageButtonHornSemiMotion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@android:color/transparent"
+        android:contentDescription="@string/icon"
+        android:src="@mipmap/signal_horn_off"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageButtonLightSemiMotion" />
+
+    <ImageButton
+        android:id="@+id/imageButtonCalibrationSemiMotion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@android:color/transparent"
+        android:contentDescription="@string/icon"
+        android:src="@mipmap/calibration_off" />
+
+
+
 
     <VideoView
         android:id="@+id/cameraView"
