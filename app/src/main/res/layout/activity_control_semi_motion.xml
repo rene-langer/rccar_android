@@ -9,7 +9,7 @@
     tools:layout_editor_absoluteX="0dp">
 
     <SeekBar
-        android:id="@+id/seekBarDrive"
+        android:id="@+id/seekBarDriveSemiMotion"
         android:layout_width="240dp"
         android:layout_height="26dp"
         android:layout_marginBottom="8dp"
@@ -31,6 +31,26 @@
         tools:layout_constraintBottom_creator="1"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintTop_creator="1" />
+
+    <SeekBar
+        android:id="@+id/seekBarSteeringSemiMotion"
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_marginStart="124dp"
+        android:focusableInTouchMode="false"
+        android:hapticFeedbackEnabled="false"
+        android:max="255"
+        android:progress="127"
+        android:progressTint="@android:color/transparent"
+        android:thumb="@mipmap/seekbar_steering"
+        android:thumbOffset="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_constraintBottom_creator="1"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1" />
+
 
     <TextView
         android:id="@+id/textViewCurrentSteeringSemiMotion"

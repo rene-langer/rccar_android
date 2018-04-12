@@ -89,7 +89,7 @@ public class ControlSliderActivity extends AppCompatActivity implements SeekBar.
         positionDrive = 127;
         hornIsActive = 0;
         lightIsActive = 0;
-        checkBoxLimitationSlider.setActivated(false);
+        checkBoxLimitationSlider.setChecked(true);
 
         // Connect to server
         if(client == null || !client.isConnected()) {

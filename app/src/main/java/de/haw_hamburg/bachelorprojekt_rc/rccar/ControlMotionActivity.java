@@ -17,21 +17,27 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
+
 import android.widget.MediaController;
+
+import android.widget.SeekBar;
+
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
 
-public class ControlMotionActivity extends AppCompatActivity implements SensorEventListener, Button.OnTouchListener, MessageReceivedListener {
+public class ControlMotionActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, SensorEventListener, Button.OnTouchListener, MessageReceivedListener {
 
     // Drive (Gyro)
     TextView textViewCurrentDriveMotion;
+    SeekBar seekBarDriveMotion;
     float positionDrive;
     float positionDriveOffset;
 
     // Steering (Gyro)
     TextView textViewCurrentSteeringMotion;
+    SeekBar seekBarSteeringMotion;
     float positionSteering;
     float positionSteeringOffset;
 
@@ -69,9 +75,15 @@ public class ControlMotionActivity extends AppCompatActivity implements SensorEv
 
         // Drive (Gyro)
         textViewCurrentDriveMotion = (TextView) findViewById(R.id.textViewCurrentDriveMotion);
+        seekBarDriveMotion = (SeekBar)findViewById(R.id.seekBarDriveMotion);
+        seekBarDriveMotion.setOnSeekBarChangeListener(this);
+        seekBarDriveMotion.setEnabled(false);
 
         // Steering (Gyro)
         textViewCurrentSteeringMotion = (TextView) findViewById(R.id.textViewCurrentSteeringMotion);
+        seekBarSteeringMotion = (SeekBar)findViewById(R.id.seekBarSteeringMotion);
+        seekBarSteeringMotion.setOnSeekBarChangeListener(this);
+        seekBarSteeringMotion.setEnabled(false);
 
         // Drive + Steering (Gyro)
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -242,7 +254,7 @@ public class ControlMotionActivity extends AppCompatActivity implements SensorEv
     }
 
 
-    // Methods for Steering (Gyro)
+    // Methods for Gyro
     @Override
     public void onSensorChanged(SensorEvent event) {
 
@@ -288,15 +300,17 @@ public class ControlMotionActivity extends AppCompatActivity implements SensorEv
         else
             positionDrive = Math.round((positionDrive + 5) * 256 / 10);
 
+        // Calculate formula
+        // output = (input - input_start)*output_range / input_range + output_start;
+
+        // set SeekBars
+        seekBarDriveMotion.setProgress((int) positionDrive);
+        seekBarSteeringMotion.setProgress((int) positionSteering);
+
         // Limitation of Drive
         if (checkBoxLimitationMotion.isChecked()) {
             positionDrive = Math.round(positionDrive * 61 / 256 + (127 - 30));
         }
-
-        // Calculate formula
-        // output = (input - input_start)*output_range / input_range + output_start;
-
-
 
         // set current Steering
         textViewCurrentSteeringMotion.setText(String.format("%s", Float.toString(positionSteering)));
@@ -311,6 +325,22 @@ public class ControlMotionActivity extends AppCompatActivity implements SensorEv
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
+    }
+
+
+    // Methods for Seekbars
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
     }
 
 

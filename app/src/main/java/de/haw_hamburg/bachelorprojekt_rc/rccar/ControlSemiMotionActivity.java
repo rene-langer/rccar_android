@@ -34,13 +34,14 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
 
     // Drive (SeekBar)
     TextView textViewCurrentDriveSemiMotion;
-    SeekBar seekBarDrive;
+    SeekBar seekBarDriveSemiMotion;
     float positionDrive;
 
     // Steering (Gyro)
     TextView textViewCurrentSteeringSemiMotion;
     SensorManager sensorManager;
     Sensor sensor;
+    SeekBar seekBarSteeringSemiMotion;
     float positionSteering;
     float positionSteeringOffset;
 
@@ -75,11 +76,14 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
 
         // Drive (SeedkBar)
         textViewCurrentDriveSemiMotion = (TextView)findViewById(R.id.textViewCurrentDriveSemiMotion);
-        seekBarDrive = (SeekBar)findViewById(R.id.seekBarDrive);
-        seekBarDrive.setOnSeekBarChangeListener(this);
+        seekBarDriveSemiMotion = (SeekBar)findViewById(R.id.seekBarDriveSemiMotion);
+        seekBarDriveSemiMotion.setOnSeekBarChangeListener(this);
 
         // Steering (Gyro)
         textViewCurrentSteeringSemiMotion = (TextView) findViewById(R.id.textViewCurrentSteeringSemiMotion);
+        seekBarSteeringSemiMotion = (SeekBar)findViewById(R.id.seekBarSteeringSemiMotion);
+        seekBarSteeringSemiMotion.setOnSeekBarChangeListener(this);
+        seekBarSteeringSemiMotion.setEnabled(false);
 
         // Drive + Steering (Gyro)
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -285,8 +289,11 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
         else
             positionSteering = Math.round((positionSteering  + 5) * 256 / 10);
 
-        // Calculate correct steering
+        // Calculate formula
         //output = (input - input_start)*output_range / input_range + output_start;
+
+        // set SeekBars
+        seekBarSteeringSemiMotion.setProgress((int) positionSteering);
 
         // set current Steering
         textViewCurrentSteeringSemiMotion.setText(Float.toString(positionSteering));
@@ -307,20 +314,14 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
 
         // Limitation of Drive
         if (checkBoxLimitationSemiMotion.isChecked()) {
-            positionDrive = seekBarDrive.getProgress() * 61 / 256 + (127 - 30);
-
-            // change textView of Drive
-            textViewCurrentDriveSemiMotion.setText(Float.toString(positionDrive));
+            positionDrive = seekBarDriveSemiMotion.getProgress() * 61 / 256 + (127 - 30);
 
         } else {
-            positionDrive = seekBarDrive.getProgress();
-
-            // change textView of Drive
-            textViewCurrentDriveSemiMotion.setText(Float.toString(positionDrive));
+            positionDrive = seekBarDriveSemiMotion.getProgress();
         }
 
-        // set current Drive
-        //textViewCurrentDriveSemiMotion.setText(Integer.toString(progress));
+        // change textView of Drive
+        textViewCurrentDriveSemiMotion.setText(Float.toString(positionDrive));
 
         // Send data
         send();
@@ -333,7 +334,7 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
         // reset progress
-        seekBarDrive.setProgress(127);
+        seekBarDriveSemiMotion.setProgress(127);
 
         // send data
         for (int i=0;i<15;i++){
