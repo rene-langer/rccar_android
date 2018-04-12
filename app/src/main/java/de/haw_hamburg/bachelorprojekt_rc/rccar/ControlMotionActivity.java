@@ -48,7 +48,7 @@ public class ControlMotionActivity extends AppCompatActivity implements SensorEv
     CheckBox checkBoxChangeAxisMotion;
     CheckBox checkBoxLimitationMotion;
 
-    // VideoView (Camera Stream)
+    // VideoView (Camera Stream 1)
     VideoView cameraStream;
 
     // Send data
