@@ -11,8 +11,8 @@
         android:id="@+id/seekBarSteeringMotion"
         android:layout_width="240dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="92dp"
+        android:layout_marginBottom="4dp"
+        android:layout_marginStart="120dp"
         android:focusableInTouchMode="false"
         android:hapticFeedbackEnabled="false"
         android:max="255"
@@ -85,9 +85,9 @@
         android:layout_marginTop="8dp"
         android:text="@string/left"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/seekBarSteering"
-        app:layout_constraintEnd_toStartOf="@+id/seekBarSteering"
-        app:layout_constraintTop_toTopOf="@+id/seekBarSteering"
+        app:layout_constraintBottom_toBottomOf="@+id/seekBarSteeringMotion"
+        app:layout_constraintEnd_toStartOf="@+id/seekBarSteeringMotion"
+        app:layout_constraintTop_toTopOf="@+id/seekBarSteeringMotion"
         tools:layout_constraintBottom_creator="1"
         tools:layout_constraintLeft_creator="1" />
 
@@ -99,13 +99,10 @@
         android:layout_marginTop="8dp"
         android:text="@string/right"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/seekBarSteering"
-        app:layout_constraintStart_toEndOf="@+id/seekBarSteering"
-        app:layout_constraintTop_toTopOf="@+id/seekBarSteering"
+        app:layout_constraintBottom_toBottomOf="@+id/seekBarSteeringMotion"
+        app:layout_constraintStart_toEndOf="@+id/seekBarSteeringMotion"
+        app:layout_constraintTop_toTopOf="@+id/seekBarSteeringMotion"
         tools:layout_constraintRight_creator="1" />
-
-    //-----------------
-
 
     <TextView
         android:id="@+id/textViewSendMotion"
@@ -146,8 +143,28 @@
         app:layout_constraintVertical_bias="0.498" />
 
     <CheckBox
+        android:id="@+id/checkBoxInvertAxis2Motion"
+        android:layout_width="111dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="48dp"
+        android:text="Inv Ax 2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <CheckBox
+        android:id="@+id/checkBoxInvertAxis1Motion"
+        android:layout_width="111dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="140dp"
+        android:text="Inv Ax 1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <CheckBox
         android:id="@+id/checkBoxChangeAxisMotion"
-        android:layout_width="105dp"
+        android:layout_width="111dp"
         android:layout_height="wrap_content"
         android:text="@string/changeAxis"
         app:layout_constraintStart_toStartOf="parent"

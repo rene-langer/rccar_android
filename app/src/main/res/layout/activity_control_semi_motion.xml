@@ -37,7 +37,7 @@
         android:layout_width="240dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
-        android:layout_marginStart="124dp"
+        android:layout_marginStart="120dp"
         android:focusableInTouchMode="false"
         android:hapticFeedbackEnabled="false"
         android:max="255"
@@ -124,7 +124,7 @@
 
     <CheckBox
         android:id="@+id/checkBoxChangeAxisSemiMotion"
-        android:layout_width="105dp"
+        android:layout_width="111dp"
         android:layout_height="wrap_content"
         android:text="@string/changeAxis"
         app:layout_constraintStart_toStartOf="parent"
@@ -137,6 +137,14 @@
         android:text="@string/limitation"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageButtonHornSemiMotion" />
+
+    <CheckBox
+        android:id="@+id/checkBoxInvertAxis1SemiMotion"
+        android:layout_width="111dp"
+        android:layout_height="wrap_content"
+        android:text="Inv Ax 1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/checkBoxChangeAxisSemiMotion" />
 
     <ImageButton
         android:id="@+id/imageButtonLightSemiMotion"
@@ -165,9 +173,6 @@
         android:backgroundTint="@android:color/transparent"
         android:contentDescription="@string/icon"
         android:src="@mipmap/calibration_off" />
-
-
-
 
     <VideoView
         android:id="@+id/cameraView"

@@ -50,9 +50,11 @@ public class ControlMotionActivity extends AppCompatActivity implements SeekBar.
     ImageButton imageButtonLightMotion;
     ImageButton imageButtonCalibrationMotion;
 
-    // CheckBoxes (Change Axis and Limitation)
+    // CheckBoxes (Change Axis, Limitation, Invert Axis 1 and Invert Axis 2)
     CheckBox checkBoxChangeAxisMotion;
     CheckBox checkBoxLimitationMotion;
+    CheckBox checkBoxInvertAxis1Motion;
+    CheckBox checkBoxInvertAxis2Motion;
 
     // VideoView (Camera Stream)
     VideoView cameraStream;
@@ -107,9 +109,11 @@ public class ControlMotionActivity extends AppCompatActivity implements SeekBar.
         imageButtonCalibrationMotion = (ImageButton) findViewById(R.id.imageButtonCalibrationMotion);
         imageButtonCalibrationMotion.setOnTouchListener(this);
 
-        // CheckBoxes (Change Axis and Limitation)
+        // CheckBoxes (Change Axis, Limitation, Invert Axis 1 and Invert Axis 2)
         checkBoxChangeAxisMotion = (CheckBox) findViewById(R.id.checkBoxChangeAxisMotion);
         checkBoxLimitationMotion = (CheckBox) findViewById(R.id.checkBoxLimitationMotion);
+        checkBoxInvertAxis1Motion = (CheckBox) findViewById(R.id.checkBoxInvertAxis1Motion);
+        checkBoxInvertAxis2Motion = (CheckBox) findViewById(R.id.checkBoxInvertAxis2Motion);
 
         // VideoStream
         cameraStream = (VideoView)findViewById(R.id.cameraView);
@@ -286,12 +290,17 @@ public class ControlMotionActivity extends AppCompatActivity implements SeekBar.
         // get sensor information and calculate steering
         positionSteering = axis1 - positionSteeringOffset;
 
+
         if (positionSteering < -5)
             positionSteering = 0;
         else if (positionSteering > 5)
             positionSteering = 255;
         else
             positionSteering = Math.round((positionSteering + 5) * 256 / 10);
+
+        // Invert Axis 1
+        if (checkBoxInvertAxis1Motion.isChecked())
+            positionSteering = 255 - positionSteering;
 
 
         // get sensor information and calculate drive
@@ -303,6 +312,10 @@ public class ControlMotionActivity extends AppCompatActivity implements SeekBar.
             positionDrive = 255;
         else
             positionDrive = Math.round((positionDrive + 5) * 256 / 10);
+
+        // Invert Axis 2
+        if (checkBoxInvertAxis2Motion.isChecked())
+            positionDrive = 255 - positionDrive;
 
         // Calculate formula
         // output = (input - input_start)*output_range / input_range + output_start;
@@ -320,6 +333,7 @@ public class ControlMotionActivity extends AppCompatActivity implements SeekBar.
         textViewCurrentSteeringMotion.setText(String.format("%s", Float.toString(positionSteering)));
 
         // set current drive
+
         textViewCurrentDriveMotion.setText(String.format("%s", Float.toString(positionDrive)));
 
         // send data

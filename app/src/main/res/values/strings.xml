@@ -13,4 +13,6 @@
     <string name="limitation">Limitation</string>
     <string name="changeAxis">Change Axis</string>
     <string name="icon">Icon</string>
+    <string name="invertAxis1">Inv Ax 1</string>
+    <string name="invertAxis2">Inv Ax 2</string>
 </resources>
