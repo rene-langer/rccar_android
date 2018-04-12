@@ -163,8 +163,9 @@ public class ControlMotionActivity extends AppCompatActivity implements SeekBar.
         sensorManager.unregisterListener(this);
 
         // Disconnect from server and stop servos
-        int result = sendByteInstruction(new byte[]{(byte)0x7F, (byte)0x7F, (byte)0x01});
-
+        while(client.isConnected()) {
+            int result = sendByteInstruction(new byte[]{(byte) 0x7F, (byte) 0x7F, (byte) 0x01});
+        }
     }
 
 
