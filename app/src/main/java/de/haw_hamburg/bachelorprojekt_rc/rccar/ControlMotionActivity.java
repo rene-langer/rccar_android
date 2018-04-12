@@ -54,7 +54,7 @@ public class ControlMotionActivity extends AppCompatActivity implements SeekBar.
     CheckBox checkBoxChangeAxisMotion;
     CheckBox checkBoxLimitationMotion;
 
-    // VideoView (Camera Stream 1)
+    // VideoView (Camera Stream)
     VideoView cameraStream;
 
     // Send data

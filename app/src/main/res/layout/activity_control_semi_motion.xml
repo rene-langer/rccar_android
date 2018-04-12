@@ -8,6 +8,16 @@
     tools:layout_editor_absoluteY="73dp"
     tools:layout_editor_absoluteX="0dp">
 
+    <VideoView
+        android:id="@+id/cameraView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.105" />
+
     <SeekBar
         android:id="@+id/seekBarDriveSemiMotion"
         android:layout_width="240dp"
@@ -166,21 +176,5 @@
         android:contentDescription="@string/icon"
         android:src="@mipmap/calibration_off" />
 
-
-
-
-    <VideoView
-        android:id="@+id/cameraView"
-        android:layout_width="360dp"
-        android:layout_height="220dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.105" />
 
 </android.support.constraint.ConstraintLayout>
