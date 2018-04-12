@@ -1,4 +1,5 @@
 package de.haw_hamburg.bachelorprojekt_rc.rccar;
+import android.net.Uri;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,9 +10,12 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.MediaController;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
+import android.widget.VideoView;
 
 
 public class ControlSliderActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, Button.OnTouchListener, MessageReceivedListener {
@@ -32,6 +36,10 @@ public class ControlSliderActivity extends AppCompatActivity implements SeekBar.
     // CheckBoxes (Limitation)
     CheckBox checkBoxLimitationSlider;
 
+    // VideoView (Camera Stream)
+    VideoView cameraStream;
+    MediaController mediaController;
+
     // Send data
     private SocketClient client = null;
     private boolean sendingData = false;
@@ -40,6 +48,7 @@ public class ControlSliderActivity extends AppCompatActivity implements SeekBar.
     byte[] data;
     int hornIsActive;
     int lightIsActive;
+    final static String ipAdr = "192.168.5.1";
 
 
     @Override
@@ -66,6 +75,9 @@ public class ControlSliderActivity extends AppCompatActivity implements SeekBar.
         // CheckBoxs (Limitation)
         checkBoxLimitationSlider = (CheckBox) findViewById(R.id.checkBoxLimitationSlider);
 
+        // VideoStream
+        cameraStream = (VideoView)findViewById(R.id.cameraView);
+
         // Send data output
         textViewSendSlider = (TextView) findViewById(R.id.textViewSendSlider);
     }
@@ -83,7 +95,7 @@ public class ControlSliderActivity extends AppCompatActivity implements SeekBar.
         // Connect to server
         if(client == null || !client.isConnected()) {
             client = new SocketClient(this);
-            client.Connect("192.168.4.1", 9999);
+            client.Connect(ipAdr, 9999);
         }
         else {
             Log.e("Connect", "Already connected to server");
@@ -91,6 +103,9 @@ public class ControlSliderActivity extends AppCompatActivity implements SeekBar.
 
         // send init
         send();
+
+        // play Camera stream
+        playStream(ipAdr);
     }
 
     @Override
@@ -117,6 +132,21 @@ public class ControlSliderActivity extends AppCompatActivity implements SeekBar.
         sendByteInstruction(data);
     }
 
+    // play camera stream
+    private void playStream(String ip){
+        String address = "http://"+ip+":8090";
+        Uri UriSrc = Uri.parse(address);
+        if(UriSrc == null)
+            Toast.makeText(ControlSliderActivity.this, "UriSrc == null", Toast.LENGTH_LONG).show();
+        else{
+            cameraStream.setVideoURI(UriSrc);
+            mediaController = new MediaController(this);
+            cameraStream.setMediaController(mediaController);
+            cameraStream.start();
+
+            Toast.makeText(ControlSliderActivity.this, "Connect: "+ ip, Toast.LENGTH_SHORT).show();
+        }
+    }
 
     // Method for Button
     @Override

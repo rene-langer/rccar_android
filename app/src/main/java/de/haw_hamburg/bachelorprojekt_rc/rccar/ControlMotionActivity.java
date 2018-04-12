@@ -6,6 +6,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.net.Uri;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,8 +17,10 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 
 public class ControlMotionActivity extends AppCompatActivity implements SensorEventListener, Button.OnTouchListener, MessageReceivedListener {
@@ -45,6 +48,10 @@ public class ControlMotionActivity extends AppCompatActivity implements SensorEv
     CheckBox checkBoxChangeAxisMotion;
     CheckBox checkBoxLimitationMotion;
 
+    // VideoView (Camera Stream)
+    VideoView cameraStream;
+    MediaController mediaController;
+
     // Send data
     private SocketClient client = null;
     private boolean sendingData = false;
@@ -54,6 +61,7 @@ public class ControlMotionActivity extends AppCompatActivity implements SensorEv
     int hornIsActive;
     int lightIsActive;
     boolean calibrationIsActive;
+    final static String ipAdr = "192.168.5.1";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +99,9 @@ public class ControlMotionActivity extends AppCompatActivity implements SensorEv
         checkBoxChangeAxisMotion = (CheckBox) findViewById(R.id.checkBoxChangeAxisMotion);
         checkBoxLimitationMotion = (CheckBox) findViewById(R.id.checkBoxLimitationMotion);
 
+        // VideoStream
+        cameraStream = (VideoView)findViewById(R.id.cameraView);
+
         // Send data output
         textViewSendMotion = (TextView) findViewById(R.id.textViewSendMotion);
     }
@@ -115,14 +126,17 @@ public class ControlMotionActivity extends AppCompatActivity implements SensorEv
         // Connect to server
         if(client == null || !client.isConnected()) {
             client = new SocketClient(this);
-            client.Connect("192.168.4.1", 9999);
+            client.Connect(ipAdr, 9999);
         }
         else {
             Log.e("Connect", "Already connected to server");
         }
 
-        // send inti
+        // send init
         send();
+
+        // play Camera stream
+        playStream(ipAdr);
     }
 
     @Override
@@ -157,6 +171,21 @@ public class ControlMotionActivity extends AppCompatActivity implements SensorEv
         sendByteInstruction(data);
     }
 
+    // play camera stream
+    private void playStream(String ip){
+        String address = "http://"+ip+":8090";
+        Uri UriSrc = Uri.parse(address);
+        if(UriSrc == null)
+            Toast.makeText(ControlMotionActivity.this, "UriSrc == null", Toast.LENGTH_LONG).show();
+        else{
+            cameraStream.setVideoURI(UriSrc);
+            mediaController = new MediaController(this);
+            cameraStream.setMediaController(mediaController);
+            cameraStream.start();
+
+            Toast.makeText(ControlMotionActivity.this, "Connect: "+ ip, Toast.LENGTH_SHORT).show();
+        }
+    }
 
     // Method for Button
     @Override
