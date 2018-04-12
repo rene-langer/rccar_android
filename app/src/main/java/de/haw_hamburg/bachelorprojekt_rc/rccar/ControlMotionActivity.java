@@ -58,7 +58,6 @@ public class ControlMotionActivity extends AppCompatActivity implements SeekBar.
 
     // VideoView (Camera Stream)
     VideoView cameraStream;
-    MediaController mediaController;
 
     // Send data
     private SocketClient client = null;
@@ -196,8 +195,6 @@ public class ControlMotionActivity extends AppCompatActivity implements SeekBar.
             Toast.makeText(ControlMotionActivity.this, "UriSrc == null", Toast.LENGTH_LONG).show();
         else{
             cameraStream.setVideoURI(UriSrc);
-            mediaController = new MediaController(this);
-            cameraStream.setMediaController(mediaController);
             cameraStream.start();
 
             Toast.makeText(ControlMotionActivity.this, "Connect: "+ ip, Toast.LENGTH_SHORT).show();

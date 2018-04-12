@@ -57,7 +57,6 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
 
     // VideoView (Camera Stream)
     VideoView cameraStream;
-    MediaController mediaController;
 
     // Send data
     private SocketClient client = null;
@@ -195,8 +194,6 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
             Toast.makeText(ControlSemiMotionActivity.this, "UriSrc == null", Toast.LENGTH_LONG).show();
         else{
             cameraStream.setVideoURI(UriSrc);
-            mediaController = new MediaController(this);
-            cameraStream.setMediaController(mediaController);
             cameraStream.start();
 
             Toast.makeText(ControlSemiMotionActivity.this, "Connect: "+ ip, Toast.LENGTH_SHORT).show();
