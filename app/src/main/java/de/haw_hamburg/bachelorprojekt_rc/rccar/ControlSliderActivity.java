@@ -112,7 +112,9 @@ public class ControlSliderActivity extends AppCompatActivity implements SeekBar.
         super.onPause();
 
         // Disconnect from server and stop servos
-        int result = sendByteInstruction(new byte[]{(byte)0x7F, (byte)0x7F, (byte)0x01});
+        while(client.isConnected()) {
+            int result = sendByteInstruction(new byte[]{(byte) 0x7F, (byte) 0x7F, (byte) 0x01});
+        }
     }
 
 

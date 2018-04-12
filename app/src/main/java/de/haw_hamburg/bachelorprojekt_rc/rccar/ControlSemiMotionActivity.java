@@ -50,9 +50,10 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
     ImageButton imageButtonLightSemiMotion;
     ImageButton imageButtonCalibrationSemiMotion;
 
-    // CheckBoxes (Change Axis and Limitation)
+    // CheckBoxes (Change Axis, Limitation, Invert Axis 1 and Invert Axis 2)
     CheckBox checkBoxChangeAxisSemiMotion;
     CheckBox checkBoxLimitationSemiMotion;
+    CheckBox checkBoxInvertAxis1SemiMotion;
 
     // VideoView (Camera Stream)
     VideoView cameraStream;
@@ -106,9 +107,10 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
         imageButtonCalibrationSemiMotion = (ImageButton) findViewById(R.id.imageButtonCalibrationSemiMotion);
         imageButtonCalibrationSemiMotion.setOnTouchListener(this);
 
-        // CheckBoxs (Change Axis and Limitation)
+        // CheckBoxes (Change Axis, Limitation, Invert Axis 1 and Invert Axis 2)
         checkBoxChangeAxisSemiMotion = (CheckBox) findViewById(R.id.checkBoxChangeAxisSemiMotion);
         checkBoxLimitationSemiMotion = (CheckBox) findViewById(R.id.checkBoxLimitationSemiMotion);
+        checkBoxInvertAxis1SemiMotion = (CheckBox) findViewById(R.id.checkBoxInvertAxis1SemiMotion);
 
         // VideoStream
         cameraStream = (VideoView)findViewById(R.id.cameraView);
@@ -260,7 +262,7 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
     @Override
     public void onSensorChanged(SensorEvent event) {
 
-        //Change axis
+        // Change axis
         float axis0, axis1;
         if (checkBoxChangeAxisSemiMotion.isChecked()) {
             // modified
@@ -288,6 +290,10 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
             positionSteering = 255;
         else
             positionSteering = Math.round((positionSteering  + 5) * 256 / 10);
+
+        // Invert Axis 1
+        if (checkBoxInvertAxis1SemiMotion.isChecked())
+            positionSteering = 255 - positionSteering;
 
         // Calculate formula
         //output = (input - input_start)*output_range / input_range + output_start;
