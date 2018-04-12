@@ -171,17 +171,16 @@
 
     <VideoView
         android:id="@+id/cameraView"
-        android:layout_width="366dp"
-        android:layout_height="210dp"
+        android:layout_width="360dp"
+        android:layout_height="220dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.623"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.4" />
+        app:layout_constraintVertical_bias="0.105" />
 
 </android.support.constraint.ConstraintLayout>
