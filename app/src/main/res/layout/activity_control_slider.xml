@@ -12,8 +12,8 @@
         android:id="@+id/seekBarSteering"
         android:layout_width="240dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="28dp"
-        android:layout_marginStart="72dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
         android:focusableInTouchMode="false"
         android:hapticFeedbackEnabled="false"
         android:max="255"
@@ -43,6 +43,7 @@
         android:thumbOffset="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/textViewBackward"
+        app:layout_constraintHorizontal_bias="0.393"
         app:layout_constraintStart_toStartOf="@+id/textViewBackward"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.498"
@@ -57,6 +58,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginTop="16dp"
         android:text="@string/forward"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="@+id/textViewBackward"
         app:layout_constraintStart_toStartOf="@+id/textViewBackward"
         app:layout_constraintTop_toTopOf="parent"
@@ -70,6 +72,7 @@
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="24dp"
         android:text="@string/backward"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         tools:layout_constraintBottom_creator="1"
@@ -82,6 +85,7 @@
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/left"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/seekBarSteering"
         app:layout_constraintEnd_toStartOf="@+id/seekBarSteering"
         app:layout_constraintTop_toTopOf="@+id/seekBarSteering"
@@ -95,6 +99,7 @@
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/right"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/seekBarSteering"
         app:layout_constraintStart_toEndOf="@+id/seekBarSteering"
         app:layout_constraintTop_toTopOf="@+id/seekBarSteering"
@@ -109,6 +114,7 @@
         android:layout_marginStart="8dp"
         android:text="@string/initValue"
         android:textSize="24sp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/textViewRightSteering"
         app:layout_constraintStart_toStartOf="@+id/seekBarSteering"
@@ -125,6 +131,7 @@
         android:layout_marginTop="8dp"
         android:text="@string/initValue"
         android:textSize="24sp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/seekBarDrive"
         app:layout_constraintTop_toTopOf="parent"
@@ -134,41 +141,39 @@
         android:id="@+id/textViewSendSlider"
         android:layout_width="wrap_content"
         android:layout_height="20dp"
-        android:layout_marginStart="132dp"
-        android:layout_marginTop="80dp"
+        android:layout_marginStart="72dp"
         android:text="@string/initInfo"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/buttonHornSlider"
-        android:layout_width="95dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="@string/horn"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ToggleButton
-        android:id="@+id/toggleButtonLightSlider"
-        android:layout_width="95dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:checked="false"
-        android:textOff="@string/lightOff"
-        android:textOn="@string/lightOn"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonHornSlider" />
 
     <CheckBox
         android:id="@+id/checkBoxLimitationSlider"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
         android:text="@string/limitation"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toggleButtonLightSlider" />
+        app:layout_constraintTop_toBottomOf="@+id/imageButtonHornSlider" />
+
+    <ImageButton
+        android:id="@+id/imageButtonLightSlider"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@android:color/transparent"
+        android:contentDescription="@string/icon"
+        android:src="@mipmap/light_bulb_off"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/imageButtonHornSlider"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@android:color/transparent"
+        android:contentDescription="@string/icon"
+        android:src="@mipmap/signal_horn_off"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageButtonLightSlider" />
 
 
 </android.support.constraint.ConstraintLayout>

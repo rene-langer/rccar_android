@@ -1,4 +1,5 @@
 package de.haw_hamburg.bachelorprojekt_rc.rccar;
+import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -7,12 +8,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
 
-public class ControlSliderActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, CompoundButton.OnCheckedChangeListener, Button.OnTouchListener, MessageReceivedListener {
+public class ControlSliderActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, Button.OnTouchListener, MessageReceivedListener {
 
     // Drive (SeekBar)
     SeekBar seekBarDrive;
@@ -24,8 +26,8 @@ public class ControlSliderActivity extends AppCompatActivity implements SeekBar.
     TextView textViewCurrentSteering;
 
     // Buttons (Light and Horn)
-    Button buttonHornSlider;
-    ToggleButton toggleButtonLightSlider;
+    ImageButton imageButtonHornSlider;
+    ImageButton imageButtonLightSlider;
 
     // CheckBoxes (Limitation)
     CheckBox checkBoxLimitationSlider;
@@ -56,10 +58,10 @@ public class ControlSliderActivity extends AppCompatActivity implements SeekBar.
         seekBarSteering.setOnSeekBarChangeListener(this);
 
         // Buttons (Light and Horn)
-        buttonHornSlider = (Button) findViewById(R.id.buttonHornSlider);
-        buttonHornSlider.setOnTouchListener(this);
-        ToggleButton toggleButtonLightSlider = (ToggleButton) findViewById(R.id.toggleButtonLightSlider);
-        toggleButtonLightSlider.setOnCheckedChangeListener(this);
+        imageButtonHornSlider = (ImageButton) findViewById(R.id.imageButtonHornSlider);
+        imageButtonHornSlider.setOnTouchListener(this);
+        imageButtonLightSlider = (ImageButton) findViewById(R.id.imageButtonLightSlider);
+        imageButtonLightSlider.setOnTouchListener(this);
 
         // CheckBoxs (Limitation)
         checkBoxLimitationSlider = (CheckBox) findViewById(R.id.checkBoxLimitationSlider);
@@ -119,32 +121,43 @@ public class ControlSliderActivity extends AppCompatActivity implements SeekBar.
     // Method for Button
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        switch(event.getAction()) {
-            case MotionEvent.ACTION_DOWN:   // pressed
-                hornIsActive = 1;
+
+        switch(v.getId()) {
+            case R.id.imageButtonHornSlider:     // ImageButton Horn
+                boolean performClick = v.performClick();
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:   // pressed
+                        hornIsActive = 1;
+                        imageButtonHornSlider.setImageResource(R.mipmap.signal_horn_on);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL: // released
+                        hornIsActive = 0;
+                        imageButtonHornSlider.setImageResource(R.mipmap.signal_horn_off);
+                        break;
+                }
                 break;
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL: // released
-                hornIsActive = 0;
-                break;
+
+            case R.id.imageButtonLightSlider:   // ImageButton Light
+                // Light on
+                if (lightIsActive == 0 && (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL)) {
+                    lightIsActive = 1;
+                    imageButtonLightSlider.setImageResource(R.mipmap.light_bulb_on);
+                    break;
+
+                // Light off
+                } else if (lightIsActive == 1 && (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL)) {
+                    lightIsActive = 0;
+                    imageButtonLightSlider.setImageResource(R.mipmap.light_bulb_off);
+                    break;
+                }
         }
 
-        // Send data
+        // Sending data
         send();
         return false;
     }
 
-
-    // Method for ToggleButton
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if (isChecked)  // enabled
-            lightIsActive = 1;
-        else    // disabled
-            lightIsActive = 0;
-
-        // Send data
-        send();
-    }
 
 
     // Methods for Seekbars (Drive + Steering)

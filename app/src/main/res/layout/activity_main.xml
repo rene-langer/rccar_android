@@ -10,73 +10,94 @@
         android:id="@+id/textView_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="175dp"
+        android:layout_marginTop="16dp"
         android:text="RC Car Control-Center"
         android:textSize="24sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="16dp"
-        android:layout_marginLeft="175dp"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/buttonConnect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="68dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:text="WLAN Settings"
-        app:layout_constraintBottom_toBottomOf="@+id/checkBox_Camera"
-        app:layout_constraintLeft_toRightOf="@+id/checkBox_Camera"
-        app:layout_constraintTop_toTopOf="@+id/checkBox_Camera"
-        app:layout_constraintVertical_bias="0.466" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.32999998" />
 
     <TextView
         android:id="@+id/textViewConnected"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="15dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:text="Status: Not connected"
-        app:layout_constraintBottom_toBottomOf="@+id/buttonConnect"
-        app:layout_constraintStart_toEndOf="@+id/buttonConnect"
-        app:layout_constraintTop_toTopOf="@+id/buttonConnect"
-        app:layout_constraintVertical_bias="0.483" />
-
-    <CheckBox
-        android:id="@+id/checkBox_Camera"
-        android:layout_width="90dp"
-        android:layout_height="33dp"
-        android:text="Camera"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="87dp"
-        android:layout_marginLeft="75dp"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintVertical_bias="0.16000003" />
 
     <Button
         android:id="@+id/buttonControlMotion"
         android:layout_width="100dp"
         android:layout_height="75dp"
-        android:layout_marginBottom="73dp"
-        android:layout_marginRight="71dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:text="Motion Control"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/buttonControlSemiMotion" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.7" />
 
     <Button
         android:id="@+id/buttonControlSemiMotion"
-        android:layout_width="100dp"
+        android:layout_width="97dp"
         android:layout_height="75dp"
-        android:layout_marginBottom="73dp"
-        android:layout_marginRight="71dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:text="Semi-Motion Control"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/buttonControlSlider" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView_header"
+        app:layout_constraintVertical_bias="0.68" />
 
     <Button
         android:id="@+id/buttonControlSlider"
-        android:layout_width="100dp"
+        android:layout_width="99dp"
         android:layout_height="78dp"
-        android:layout_marginBottom="68dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:text="Slider Control"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toRightOf="@+id/textView_header" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.8"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.7" />
 
 </android.support.constraint.ConstraintLayout>
