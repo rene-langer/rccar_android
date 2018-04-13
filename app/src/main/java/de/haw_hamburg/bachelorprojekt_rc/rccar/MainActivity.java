@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    Button buttonConnect, buttonMotion, buttonSemiMotion, buttonSlider;
+    Button buttonConnect, buttonMotion, buttonSemiMotion, buttonSlider, buttonJoystick;
     TextView textViewConnected;
     CheckBox checkBoxCamera;
 
@@ -36,6 +36,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         buttonSemiMotion.setOnClickListener(this);
         buttonSlider = (Button)findViewById(R.id.buttonControlSlider);
         buttonSlider.setOnClickListener(this);
+        buttonJoystick = (Button)findViewById(R.id.buttonControlJoystick);
+        buttonJoystick.setOnClickListener(this);
 
         // Camera information
         checkBoxCamera = (CheckBox) findViewById(R.id.checkBoxCamera);
@@ -95,6 +97,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent intentControlSemiMotion = new Intent(this, ControlSemiMotionActivity.class);
                 intentControlSemiMotion.putExtra("cameraIsChecked", checkBoxCamera.isChecked());
                 startActivity(intentControlSemiMotion);
+                break;
+            case R.id.buttonControlJoystick:
+                // go to ControlJoystickActivity
+                Intent intentControlJoystick = new Intent(this, ControlJoystickActivity.class);
+                intentControlJoystick.putExtra("cameraIsChecked", checkBoxCamera.isChecked());
+                startActivity(intentControlJoystick);
                 break;
         }
     }

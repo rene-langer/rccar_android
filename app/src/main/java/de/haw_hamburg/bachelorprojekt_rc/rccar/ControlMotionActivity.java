@@ -191,22 +191,7 @@ public class ControlMotionActivity extends AppCompatActivity implements SeekBar.
     }
 
 
-    // Send information
-    public void send() {
-        data = new byte[3];
-        data[0] = (byte) positionDrive;
-        data[1] = (byte) positionSteering;
-        data[2] = (byte) (128 * lightIsActive + 64 * hornIsActive);
-
-        // Output
-        String output = String.format("Information: data[0]: 0x%x", data[0]) + String.format(" - data[1]: 0x%x", data[1]) + String.format(" - data[2]: 0x%x", data[2]);
-        textViewSendMotion.setText(output);
-
-        // send data to server
-        sendByteInstruction(data);
-    }
-
-    // play camera stream
+    // Method for camera stream
     private void playStream(String ip){
         String address = "http://"+ip+":8090";
         Uri UriSrc = Uri.parse(address);
@@ -220,7 +205,8 @@ public class ControlMotionActivity extends AppCompatActivity implements SeekBar.
         }
     }
 
-    // Method for Button
+
+    // Method for Buttons
     @Override
     public boolean onTouch(View v, MotionEvent event) {
 
@@ -362,7 +348,7 @@ public class ControlMotionActivity extends AppCompatActivity implements SeekBar.
     }
 
 
-    // Methods for Seekbars
+    // Methods for SeekBars
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
@@ -379,6 +365,20 @@ public class ControlMotionActivity extends AppCompatActivity implements SeekBar.
 
 
     // Methods for sending
+    public void send() {
+        data = new byte[3];
+        data[0] = (byte) positionDrive;
+        data[1] = (byte) positionSteering;
+        data[2] = (byte) (128 * lightIsActive + 64 * hornIsActive);
+
+        // Output
+        String output = String.format("Information: data[0]: 0x%x", data[0]) + String.format(" - data[1]: 0x%x", data[1]) + String.format(" - data[2]: 0x%x", data[2]);
+        // textViewSendMotion.setText(output);
+
+        // send data to server
+        sendByteInstruction(data);
+    }
+
     private int sendByteInstruction(byte[] data) {
         if(!sendingData && client.isConnected()) {
             sendingData = true;

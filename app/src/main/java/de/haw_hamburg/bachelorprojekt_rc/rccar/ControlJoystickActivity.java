@@ -6,34 +6,35 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
-
 import java.util.Timer;
 import java.util.TimerTask;
-
 import io.github.controlwear.virtual.joystick.android.JoystickView;
 
 
 public class ControlJoystickActivity extends AppCompatActivity implements JoystickView.OnMoveListener, ImageButton.OnTouchListener, MessageReceivedListener {
 
-    JoystickView joystick;
-    double acceleration = 127.0;
-    double steering = 127.0;
-
     // Buttons (Light and Horn)
     ImageButton imageButtonHornSlider;
     ImageButton imageButtonLightSlider;
 
-    // CheckBoxes (Limitation)
+    // CheckBox (Limitation)
     CheckBox checkBoxLimitationSlider;
 
     // VideoView (Camera Stream)
     VideoView cameraStream;
+
+    // Joystick
+    JoystickView joystick;
+    double acceleration = 127.0;
+    double steering = 127.0;
+
+    // Timer
+    Timer sendTimer;
 
     // Send data
     private SocketClient client = null;
@@ -45,37 +46,11 @@ public class ControlJoystickActivity extends AppCompatActivity implements Joysti
     int lightIsActive;
     final static String ipAdr = "192.168.5.1";
 
-    Timer sendTimer;
-
-
-    @Override
-    public void onMove(int angle, int strength) {
-
-        if(strength < 20){
-            acceleration = 127;
-        }
-        else{
-            if(checkBoxLimitationSlider.isChecked()){
-                acceleration = 127 + 25 * strength/100 * Math.signum(Math.sin(Math.toRadians(angle)));
-            }
-            else{
-                acceleration = 127 + 127 * strength/100 * Math.signum(Math.sin(Math.toRadians(angle)));
-            }
-        }
-
-
-
-
-        steering = 127 + 127 * strength/100 * Math.cos(Math.toRadians(angle));
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_control_joystick);
-
-        joystick = (JoystickView) findViewById(R.id.joystick);
-        joystick.setOnMoveListener(this, 20);
 
         // Buttons (Light and Horn)
         imageButtonHornSlider = (ImageButton) findViewById(R.id.imageButtonHornSlider);
@@ -83,14 +58,23 @@ public class ControlJoystickActivity extends AppCompatActivity implements Joysti
         imageButtonLightSlider = (ImageButton) findViewById(R.id.imageButtonLightSlider);
         imageButtonLightSlider.setOnTouchListener(this);
 
-        // CheckBoxs (Limitation)
+        // CheckBox (Limitation)
         checkBoxLimitationSlider = (CheckBox) findViewById(R.id.checkBoxLimitationSlider);
 
-//        // VideoStream
-//        cameraStream = (VideoView)findViewById(R.id.cameraView);
+        // VideoStream
+        cameraStream = (VideoView)findViewById(R.id.cameraView);
+
+        // Camera visible?
+        if (!getIntent().getExtras().getBoolean("cameraIsChecked")) {
+            cameraStream.setVisibility(View.GONE);
+        }
 
         // Send data output
         textViewSendSlider = (TextView) findViewById(R.id.textViewSendSlider);
+
+        // Joystick
+        joystick = (JoystickView) findViewById(R.id.joystick);
+        joystick.setOnMoveListener(this, 20);
 
         // automatic sending
         sendTimer = new Timer();
@@ -125,7 +109,16 @@ public class ControlJoystickActivity extends AppCompatActivity implements Joysti
         }, 20, 20);
 
         // play Camera stream
-        //playStream(ipAdr);
+        if (getIntent().getExtras().getBoolean("cameraIsChecked")) {
+            playStream(ipAdr);
+            cameraStream.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        cameraStream.stopPlayback();
     }
 
     @Override
@@ -133,13 +126,25 @@ public class ControlJoystickActivity extends AppCompatActivity implements Joysti
         super.onPause();
 
         sendTimer.cancel();
+
         // Disconnect from server and stop servos
         while(client.isConnected()) {
             int result = sendByteInstruction(new byte[]{(byte) 0x7F, (byte) 0x7F, (byte) 0x01});
         }
     }
 
-    // play camera stream
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Camera visible?
+        if (!getIntent().getExtras().getBoolean("cameraIsChecked")) {
+            cameraStream.setVisibility(View.GONE);
+        }
+    }
+
+
+    // Method for camera stream
     private void playStream(String ip){
         String address = "http://"+ip+":8090";
         Uri UriSrc = Uri.parse(address);
@@ -151,6 +156,25 @@ public class ControlJoystickActivity extends AppCompatActivity implements Joysti
 
             Toast.makeText(ControlJoystickActivity.this, "Connect: "+ ip, Toast.LENGTH_SHORT).show();
         }
+    }
+
+
+    // Method for Joystick
+    @Override
+    public void onMove(int angle, int strength) {
+
+        if(strength < 20){
+            acceleration = 127;
+        }
+        else{
+            if(checkBoxLimitationSlider.isChecked()){
+                acceleration = 127 + 25 * strength/100 * Math.signum(Math.sin(Math.toRadians(angle)));
+            }
+            else{
+                acceleration = 127 + 127 * strength/100 * Math.signum(Math.sin(Math.toRadians(angle)));
+            }
+        }
+        steering = 127 + 127 * strength/100 * Math.cos(Math.toRadians(angle));
     }
 
 
@@ -192,7 +216,24 @@ public class ControlJoystickActivity extends AppCompatActivity implements Joysti
         return false;
     }
 
+
     // Methods for sending
+    public void send() {
+        data = new byte[3];
+        data[0] = (byte) acceleration;
+        data[1] = (byte) steering;
+        data[2] = (byte) (128 * lightIsActive + 64 * hornIsActive);
+
+        // Output
+        String output = String.format("Information: data[0]: 0x%x", data[0]) +
+                String.format(" - data[1]: 0x%x", data[1]) +
+                String.format(" - data[2]: 0x%x", data[2]);
+        // textViewSendSlider.setText(output);
+
+        // send data to server
+        sendByteInstruction(data);
+    }
+
     private int sendByteInstruction(byte[] data) {
         if(!sendingData && client.isConnected()) {
             sendingData = true;
@@ -203,22 +244,6 @@ public class ControlJoystickActivity extends AppCompatActivity implements Joysti
         else {
             return -1;
         }
-    }
-    // Send information
-    public void send() {
-        data = new byte[3];
-        data[0] = (byte) acceleration;
-        data[1] = (byte) steering;
-        data[2] = (byte) (128 * lightIsActive + 64 * hornIsActive);
-
-        // Output
-        String output = String.format("Information: data[0]: 0x%x", data[0]) +
-                        String.format(" - data[1]: 0x%x", data[1]) +
-                        String.format(" - data[2]: 0x%x", data[2]);
-        //textViewSendSlider.setText(output);
-
-        // send data to server
-        sendByteInstruction(data);
     }
 
     @Override
