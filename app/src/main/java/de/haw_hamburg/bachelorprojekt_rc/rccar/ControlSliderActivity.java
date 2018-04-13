@@ -77,6 +77,11 @@ public class ControlSliderActivity extends AppCompatActivity implements SeekBar.
         // VideoStream
         cameraStream = (VideoView)findViewById(R.id.cameraView);
 
+        // Camera visible?
+        if (!getIntent().getExtras().getBoolean("cameraIsChecked")) {
+            cameraStream.setVisibility(View.GONE);
+        }
+
         // Send data output
         textViewSendSlider = (TextView) findViewById(R.id.textViewSendSlider);
     }
@@ -104,7 +109,16 @@ public class ControlSliderActivity extends AppCompatActivity implements SeekBar.
         send();
 
         // play Camera stream
-        playStream(ipAdr);
+        if (getIntent().getExtras().getBoolean("cameraIsChecked")) {
+            playStream(ipAdr);
+            cameraStream.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        cameraStream.stopPlayback();
     }
 
     @Override
@@ -114,6 +128,16 @@ public class ControlSliderActivity extends AppCompatActivity implements SeekBar.
         // Disconnect from server and stop servos
         while(client.isConnected()) {
             int result = sendByteInstruction(new byte[]{(byte) 0x7F, (byte) 0x7F, (byte) 0x01});
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Camera visible?
+        if (!getIntent().getExtras().getBoolean("cameraIsChecked")) {
+            cameraStream.setVisibility(View.GONE);
         }
     }
 
@@ -186,7 +210,6 @@ public class ControlSliderActivity extends AppCompatActivity implements SeekBar.
         send();
         return false;
     }
-
 
 
     // Methods for Seekbars (Drive + Steering)

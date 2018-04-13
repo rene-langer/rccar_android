@@ -13,12 +13,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     Button buttonConnect, buttonMotion, buttonSemiMotion, buttonSlider;
     TextView textViewConnected;
+    CheckBox checkBoxCamera;
 
 
     @Override
@@ -34,6 +36,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         buttonSemiMotion.setOnClickListener(this);
         buttonSlider = (Button)findViewById(R.id.buttonControlSlider);
         buttonSlider.setOnClickListener(this);
+
+        // Camera information
+        checkBoxCamera = (CheckBox) findViewById(R.id.checkBoxCamera);
 
         // Connection information
         textViewConnected = (TextView)findViewById(R.id.textViewConnected);
@@ -76,16 +81,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.buttonControlMotion:
                 // go to ControlMotionActivity
                 Intent intentControlMotion = new Intent(this, ControlMotionActivity.class);
+                intentControlMotion.putExtra("cameraIsChecked", checkBoxCamera.isChecked());
                 startActivity(intentControlMotion);
                 break;
             case R.id.buttonControlSlider:
                 // go to ControlSliderActivity
                 Intent intentControlSlider = new Intent(this, ControlSliderActivity.class);
+                intentControlSlider.putExtra("cameraIsChecked", checkBoxCamera.isChecked());
                 startActivity(intentControlSlider);
                 break;
             case R.id.buttonControlSemiMotion:
                 // go to ControlSemiMotionActivity
                 Intent intentControlSemiMotion = new Intent(this, ControlSemiMotionActivity.class);
+                intentControlSemiMotion.putExtra("cameraIsChecked", checkBoxCamera.isChecked());
                 startActivity(intentControlSemiMotion);
                 break;
         }

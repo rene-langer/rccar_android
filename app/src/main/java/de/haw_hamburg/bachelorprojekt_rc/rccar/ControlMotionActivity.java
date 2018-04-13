@@ -115,7 +115,12 @@ public class ControlMotionActivity extends AppCompatActivity implements SeekBar.
         checkBoxInvertAxis2Motion = (CheckBox) findViewById(R.id.checkBoxInvertAxis2Motion);
 
         // VideoStream
-        cameraStream = (VideoView)findViewById(R.id.cameraView);
+        cameraStream = (VideoView) findViewById(R.id.cameraView);
+
+        // Camera visible?
+        if (!getIntent().getExtras().getBoolean("cameraIsChecked")) {
+            cameraStream.setVisibility(View.GONE);
+        }
 
         // Send data output
         textViewSendMotion = (TextView) findViewById(R.id.textViewSendMotion);
@@ -151,13 +156,17 @@ public class ControlMotionActivity extends AppCompatActivity implements SeekBar.
         send();
 
         // play Camera stream
-        playStream(ipAdr);
+        if (getIntent().getExtras().getBoolean("cameraIsChecked")) {
+            playStream(ipAdr);
+            cameraStream.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
     public void onStop() {
         super.onStop();
         sensorManager.unregisterListener(this);
+        cameraStream.stopPlayback();
     }
 
     @Override
@@ -168,6 +177,16 @@ public class ControlMotionActivity extends AppCompatActivity implements SeekBar.
         // Disconnect from server and stop servos
         while(client.isConnected()) {
             int result = sendByteInstruction(new byte[]{(byte) 0x7F, (byte) 0x7F, (byte) 0x01});
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Camera visible?
+        if (!getIntent().getExtras().getBoolean("cameraIsChecked")) {
+            cameraStream.setVisibility(View.GONE);
         }
     }
 

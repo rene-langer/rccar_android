@@ -75,7 +75,7 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_control_semi_motion);
 
-        // Drive (SeedkBar)
+        // Drive (SeekBar)
         textViewCurrentDriveSemiMotion = (TextView)findViewById(R.id.textViewCurrentDriveSemiMotion);
         seekBarDriveSemiMotion = (SeekBar)findViewById(R.id.seekBarDriveSemiMotion);
         seekBarDriveSemiMotion.setOnSeekBarChangeListener(this);
@@ -113,7 +113,12 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
         checkBoxInvertAxis1SemiMotion = (CheckBox) findViewById(R.id.checkBoxInvertAxis1SemiMotion);
 
         // VideoStream
-        cameraStream = (VideoView)findViewById(R.id.cameraView);
+        cameraStream = (VideoView) findViewById(R.id.cameraView);
+
+        // Camera visible?
+        if (!getIntent().getExtras().getBoolean("cameraIsChecked")) {
+            cameraStream.setVisibility(View.GONE);
+        }
 
         // Send data output
         textViewSendSemiMotion = (TextView) findViewById(R.id.textViewSendSemiMotion);
@@ -148,7 +153,10 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
         send();
 
         // play Camera stream
-        playStream(ipAdr);
+        if (getIntent().getExtras().getBoolean("cameraIsChecked")) {
+            playStream(ipAdr);
+            cameraStream.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -169,6 +177,16 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Camera visible?
+        if (!getIntent().getExtras().getBoolean("cameraIsChecked")) {
+            cameraStream.setVisibility(View.GONE);
+        }
+    }
+
 
     // Send information
     public void send() {
@@ -184,7 +202,6 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
         // send data to server
         sendByteInstruction(data);
     }
-
 
     // play camera stream
     private void playStream(String ip){
