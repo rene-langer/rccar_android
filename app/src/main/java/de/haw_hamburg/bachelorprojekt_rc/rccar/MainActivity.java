@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         DhcpInfo dhcpInfo = wifiManager.getDhcpInfo();
 
         if (wifiInfo.getSupplicantState() == SupplicantState.COMPLETED) {
-            if (wifiInfo.getSSID().equals("\"RCCar\""))
+            if (wifiInfo.getSSID().equals("\"CarRC\""))
                 textViewConnected.setText("Status: Connected to " + wifiInfo.getSSID() + "(" + dhcpInfo.ipAddress + ")" + "!");
             else
                 textViewConnected.setText("Status: Not connected!");
