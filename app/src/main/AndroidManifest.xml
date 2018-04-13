@@ -28,17 +28,22 @@
             android:name=".ControlMotionActivity"
             android:label="Motion Control"
             android:parentActivityName=".MainActivity"
-            android:screenOrientation="landscape"></activity>
+            android:screenOrientation="landscape"/>
         <activity
             android:name=".ControlSemiMotionActivity"
             android:label="Semi-Motion Control"
             android:parentActivityName=".MainActivity"
-            android:screenOrientation="landscape"></activity>
+            android:screenOrientation="landscape"/>
         <activity
             android:name=".ControlSliderActivity"
             android:label="Slider Control"
             android:parentActivityName=".MainActivity"
-            android:screenOrientation="landscape"></activity>
+            android:screenOrientation="landscape"/>
+        <activity
+            android:name=".ControlJoystickActivity"
+            android:label="Joystick Control"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="landscape"/>
     </application>
 
 </manifest>
