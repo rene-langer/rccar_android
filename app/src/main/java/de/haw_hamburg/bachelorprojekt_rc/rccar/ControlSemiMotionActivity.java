@@ -28,6 +28,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class ControlSemiMotionActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, SensorEventListener, Button.OnTouchListener, MessageReceivedListener {
@@ -57,6 +59,8 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
 
     // VideoView (Camera Stream)
     VideoView cameraStream;
+
+    Timer sendTimer;
 
     // Send data
     private SocketClient client = null;
@@ -150,7 +154,13 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
         }
 
         // send init
-        send();
+        // send init
+        sendTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                send();
+            }
+        }, 20, 20);
 
         // play Camera stream
         if (getIntent().getExtras().getBoolean("cameraIsChecked")) {
@@ -170,6 +180,8 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
     protected void onPause() {
         super.onPause();
         sensorManager.unregisterListener(this);
+
+        sendTimer.cancel();
 
         // Disconnect from server and stop servos
         while(client.isConnected()) {

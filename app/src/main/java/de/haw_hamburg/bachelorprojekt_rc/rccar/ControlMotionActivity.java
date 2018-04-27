@@ -26,6 +26,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 
 public class ControlMotionActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, SensorEventListener, Button.OnTouchListener, MessageReceivedListener {
 
@@ -58,6 +61,8 @@ public class ControlMotionActivity extends AppCompatActivity implements SeekBar.
 
     // VideoView (Camera Stream)
     VideoView cameraStream;
+
+    Timer sendTimer;
 
     // Send data
     private SocketClient client = null;
@@ -153,7 +158,12 @@ public class ControlMotionActivity extends AppCompatActivity implements SeekBar.
         }
 
         // send init
-        send();
+        sendTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                send();
+            }
+        }, 20, 20);
 
         // play Camera stream
         if (getIntent().getExtras().getBoolean("cameraIsChecked")) {
@@ -174,6 +184,8 @@ public class ControlMotionActivity extends AppCompatActivity implements SeekBar.
         super.onPause();
         sensorManager.unregisterListener(this);
 
+        sendTimer.cancel();
+        
         // Disconnect from server and stop servos
         while(client.isConnected()) {
             int result = sendByteInstruction(new byte[]{(byte) 0x7F, (byte) 0x7F, (byte) 0x01});

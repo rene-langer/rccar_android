@@ -17,6 +17,9 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 import android.widget.VideoView;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 
 public class ControlSliderActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, Button.OnTouchListener, MessageReceivedListener {
 
@@ -38,6 +41,9 @@ public class ControlSliderActivity extends AppCompatActivity implements SeekBar.
 
     // VideoView (Camera Stream)
     VideoView cameraStream;
+
+    // Timer
+    Timer sendTimer;
 
     // Send data
     private SocketClient client = null;
@@ -106,7 +112,12 @@ public class ControlSliderActivity extends AppCompatActivity implements SeekBar.
         }
 
         // send init
-        send();
+        sendTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                send();
+            }
+        }, 20, 20);
 
         // play Camera stream
         if (getIntent().getExtras().getBoolean("cameraIsChecked")) {
@@ -124,6 +135,8 @@ public class ControlSliderActivity extends AppCompatActivity implements SeekBar.
     @Override
     protected void onPause() {
         super.onPause();
+
+        sendTimer.cancel();
 
         // Disconnect from server and stop servos
         while(client.isConnected()) {
