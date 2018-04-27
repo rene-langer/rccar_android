@@ -127,6 +127,9 @@ public class ControlMotionActivity extends AppCompatActivity implements SeekBar.
             cameraStream.setVisibility(View.GONE);
         }
 
+        // automatic sending
+        sendTimer = new Timer();
+
         // Send data output
         textViewSendMotion = (TextView) findViewById(R.id.textViewSendMotion);
     }

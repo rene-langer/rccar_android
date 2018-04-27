@@ -88,6 +88,9 @@ public class ControlSliderActivity extends AppCompatActivity implements SeekBar.
             cameraStream.setVisibility(View.GONE);
         }
 
+        // automatic sending
+        sendTimer = new Timer();
+
         // Send data output
         textViewSendSlider = (TextView) findViewById(R.id.textViewSendSlider);
     }

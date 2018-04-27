@@ -124,6 +124,9 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
             cameraStream.setVisibility(View.GONE);
         }
 
+        // automatic sending
+        sendTimer = new Timer();
+
         // Send data output
         textViewSendSemiMotion = (TextView) findViewById(R.id.textViewSendSemiMotion);
     }
