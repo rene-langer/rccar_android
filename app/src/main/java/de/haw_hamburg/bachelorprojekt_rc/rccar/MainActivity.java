@@ -14,12 +14,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    Button buttonConnect, buttonMotion, buttonSemiMotion, buttonSlider, buttonJoystick;
-    TextView textViewConnected;
+    Button buttonMotion, buttonSemiMotion, buttonSlider, buttonJoystick;
+    ImageButton imageButtonConnect;
     CheckBox checkBoxCamera;
 
 
@@ -28,8 +29,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        buttonConnect = (Button)findViewById(R.id.buttonConnect);
-        buttonConnect.setOnClickListener(this);
+        imageButtonConnect = (ImageButton)findViewById(R.id.imageButtonConnect);
+        imageButtonConnect.setOnClickListener(this);
         buttonMotion = (Button)findViewById(R.id.buttonControlMotion);
         buttonMotion.setOnClickListener(this);
         buttonSemiMotion = (Button)findViewById(R.id.buttonControlSemiMotion);
@@ -43,16 +44,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         checkBoxCamera = (CheckBox) findViewById(R.id.checkBoxCamera);
 
         // Connection information
-        textViewConnected = (TextView)findViewById(R.id.textViewConnected);
         WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-        DhcpInfo dhcpInfo = wifiManager.getDhcpInfo();
 
         if (wifiInfo.getSupplicantState() == SupplicantState.COMPLETED) {
-            if (wifiInfo.getSSID().equals("\"RCCar\""))
-                textViewConnected.setText("Status: Connected to " + wifiInfo.getSSID() + "(" + dhcpInfo.ipAddress + ")" + "!");
+            if (wifiInfo.getSSID().equals("\"CarRC\""))
+                imageButtonConnect.setImageResource(R.drawable.wifi_connected);
             else
-                textViewConnected.setText("Status: Not connected!");
+                imageButtonConnect.setImageResource(R.drawable.wifi_not_connected);
         }
     }
 
@@ -63,20 +62,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // update Connection information
         WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-        DhcpInfo dhcpInfo = wifiManager.getDhcpInfo();
 
         if (wifiInfo.getSupplicantState() == SupplicantState.COMPLETED) {
             if (wifiInfo.getSSID().equals("\"CarRC\""))
-                textViewConnected.setText("Status: Connected to " + wifiInfo.getSSID() + "(" + dhcpInfo.ipAddress + ")" + "!");
+                imageButtonConnect.setImageResource(R.drawable.wifi_connected);
             else
-                textViewConnected.setText("Status: Not connected!");
+                imageButtonConnect.setImageResource(R.drawable.wifi_not_connected);
         }
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.buttonConnect:
+            case R.id.imageButtonConnect:
                 // go to WIFI Settings
                 startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
                 break;
@@ -104,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 intentControlJoystick.putExtra("cameraIsChecked", checkBoxCamera.isChecked());
                 startActivity(intentControlJoystick);
                 break;
+
         }
     }
 }
