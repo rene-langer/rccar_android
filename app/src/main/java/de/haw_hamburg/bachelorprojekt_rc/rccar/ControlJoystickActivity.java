@@ -40,7 +40,6 @@ public class ControlJoystickActivity extends AppCompatActivity implements Joysti
     private SocketClient client = null;
     private boolean sendingData = false;
     private byte[] dataToSend;
-    TextView textViewSendSlider;
     byte[] data;
     int hornIsActive;
     int lightIsActive;
@@ -68,9 +67,6 @@ public class ControlJoystickActivity extends AppCompatActivity implements Joysti
         if (!getIntent().getExtras().getBoolean("cameraIsChecked")) {
             cameraStream.setVisibility(View.GONE);
         }
-
-        // Send data output
-        textViewSendSlider = (TextView) findViewById(R.id.textViewSendSlider);
 
         // Joystick
         joystick = (JoystickView) findViewById(R.id.joystick);
@@ -125,6 +121,7 @@ public class ControlJoystickActivity extends AppCompatActivity implements Joysti
     protected void onPause() {
         super.onPause();
 
+        // Timer
         sendTimer.cancel();
 
         // Disconnect from server and stop servos
@@ -223,12 +220,6 @@ public class ControlJoystickActivity extends AppCompatActivity implements Joysti
         data[0] = (byte) acceleration;
         data[1] = (byte) steering;
         data[2] = (byte) (128 * lightIsActive + 64 * hornIsActive);
-
-        // Output
-        String output = String.format("Information: data[0]: 0x%x", data[0]) +
-                String.format(" - data[1]: 0x%x", data[1]) +
-                String.format(" - data[2]: 0x%x", data[2]);
-        // textViewSendSlider.setText(output);
 
         // send data to server
         sendByteInstruction(data);

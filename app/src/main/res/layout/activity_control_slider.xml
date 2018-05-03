@@ -147,16 +147,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.498" />
 
-    <TextView
-        android:id="@+id/textViewSendSlider"
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:layout_marginStart="72dp"
-        android:text="@string/initInfo"
-        android:visibility="invisible"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <CheckBox
         android:id="@+id/checkBoxLimitationSlider"
         android:layout_width="wrap_content"

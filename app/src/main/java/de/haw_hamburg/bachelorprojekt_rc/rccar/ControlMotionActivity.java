@@ -15,17 +15,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageButton;
-
-import android.widget.MediaController;
-
 import android.widget.SeekBar;
-
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
-
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -62,13 +56,13 @@ public class ControlMotionActivity extends AppCompatActivity implements SeekBar.
     // VideoView (Camera Stream)
     VideoView cameraStream;
 
+    // Timer
     Timer sendTimer;
 
     // Send data
     private SocketClient client = null;
     private boolean sendingData = false;
     private byte[] dataToSend;
-    TextView textViewSendMotion;
     byte[] data;
     int hornIsActive;
     int lightIsActive;
@@ -132,15 +126,13 @@ public class ControlMotionActivity extends AppCompatActivity implements SeekBar.
 
         // automatic sending
         sendTimer = new Timer();
-
-        // Send data output
-        textViewSendMotion = (TextView) findViewById(R.id.textViewSendMotion);
     }
 
     @Override
     public void onStart() {
         super.onStart();
 
+        // Sensor
         sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
 
         // reset information
@@ -197,6 +189,7 @@ public class ControlMotionActivity extends AppCompatActivity implements SeekBar.
         super.onPause();
         sensorManager.unregisterListener(this);
 
+        // Timer
         sendTimer.cancel();
         
         // Disconnect from server and stop servos
@@ -361,7 +354,6 @@ public class ControlMotionActivity extends AppCompatActivity implements SeekBar.
         textViewCurrentSteeringMotion.setText(String.format("%s", Float.toString(positionSteering)));
 
         // set current drive
-
         textViewCurrentDriveMotion.setText(String.format("%s", Float.toString(positionDrive)));
 
         // send data
@@ -397,10 +389,6 @@ public class ControlMotionActivity extends AppCompatActivity implements SeekBar.
             data[0] = (byte) positionDrive;
             data[1] = (byte) positionSteering;
             data[2] = (byte) (128 * lightIsActive + 64 * hornIsActive);
-
-            // Output
-            String output = String.format("Information: data[0]: 0x%x", data[0]) + String.format(" - data[1]: 0x%x", data[1]) + String.format(" - data[2]: 0x%x", data[2]);
-            // textViewSendMotion.setText(output);
 
             // send data to server
             sendByteInstruction(data);

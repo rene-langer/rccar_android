@@ -1,6 +1,6 @@
 package de.haw_hamburg.bachelorprojekt_rc.rccar;
+
 import android.net.Uri;
-import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,15 +8,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageButton;
-import android.widget.MediaController;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 import android.widget.VideoView;
-
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -49,7 +45,6 @@ public class ControlSliderActivity extends AppCompatActivity implements SeekBar.
     private SocketClient client = null;
     private boolean sendingData = false;
     private byte[] dataToSend;
-    TextView textViewSendSlider;
     byte[] data;
     int hornIsActive;
     int lightIsActive;
@@ -77,7 +72,7 @@ public class ControlSliderActivity extends AppCompatActivity implements SeekBar.
         imageButtonLightSlider = (ImageButton) findViewById(R.id.imageButtonLightSlider);
         imageButtonLightSlider.setOnTouchListener(this);
 
-        // CheckBoxs (Limitation)
+        // CheckBoxes (Limitation)
         checkBoxLimitationSlider = (CheckBox) findViewById(R.id.checkBoxLimitationSlider);
 
         // VideoStream
@@ -90,9 +85,6 @@ public class ControlSliderActivity extends AppCompatActivity implements SeekBar.
 
         // automatic sending
         sendTimer = new Timer();
-
-        // Send data output
-        textViewSendSlider = (TextView) findViewById(R.id.textViewSendSlider);
     }
 
     @Override
@@ -139,6 +131,7 @@ public class ControlSliderActivity extends AppCompatActivity implements SeekBar.
     protected void onPause() {
         super.onPause();
 
+        // Timer
         sendTimer.cancel();
 
         // Disconnect from server and stop servos
@@ -278,10 +271,6 @@ public class ControlSliderActivity extends AppCompatActivity implements SeekBar.
         data[0] = (byte) positionDrive;
         data[1] = (byte) seekBarSteering.getProgress();
         data[2] = (byte) (128 * lightIsActive + 64 * hornIsActive);
-
-        // Output
-        String output = String.format("Information: data[0]: 0x%x", data[0]) + String.format(" - data[1]: 0x%x", data[1]) + String.format(" - data[2]: 0x%x", data[2]);
-        textViewSendSlider.setText(output);
 
         // send data to server
         sendByteInstruction(data);

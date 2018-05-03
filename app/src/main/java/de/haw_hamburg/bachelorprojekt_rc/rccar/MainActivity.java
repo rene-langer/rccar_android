@@ -1,21 +1,17 @@
 package de.haw_hamburg.bachelorprojekt_rc.rccar;
 
-
 import android.content.Context;
 import android.content.Intent;
-import android.net.DhcpInfo;
 import android.net.wifi.SupplicantState;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -102,7 +98,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 intentControlJoystick.putExtra("cameraIsChecked", checkBoxCamera.isChecked());
                 startActivity(intentControlJoystick);
                 break;
-
         }
     }
 }

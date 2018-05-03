@@ -6,10 +6,8 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-
 import android.net.Uri;
 import android.os.CountDownTimer;
-
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,17 +15,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-
-import android.widget.CompoundButton;
-import android.widget.MediaController;
 import android.widget.SeekBar;
-import android.widget.ToggleButton;
 import android.widget.VideoView;
-
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -60,13 +52,13 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
     // VideoView (Camera Stream)
     VideoView cameraStream;
 
+    // Timer
     Timer sendTimer;
 
     // Send data
     private SocketClient client = null;
     private boolean sendingData = false;
     private byte[] dataToSend;
-    TextView textViewSendSemiMotion;
     byte[] data;
     int hornIsActive;
     int lightIsActive;
@@ -128,15 +120,13 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
 
         // automatic sending
         sendTimer = new Timer();
-
-        // Send data output
-        textViewSendSemiMotion = (TextView) findViewById(R.id.textViewSendSemiMotion);
     }
 
     @Override
     public void onStart() {
         super.onStart();
 
+        // Sensor
         sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
 
         // reset information
@@ -192,6 +182,7 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
         super.onPause();
         sensorManager.unregisterListener(this);
 
+        // Timer
         sendTimer.cancel();
 
         // Disconnect from server and stop servos
@@ -383,10 +374,6 @@ public class ControlSemiMotionActivity extends AppCompatActivity implements Seek
             data[0] = (byte) positionDrive;
             data[1] = (byte) positionSteering;
             data[2] = (byte) (128 * lightIsActive + 64 * hornIsActive);
-
-            // Output
-            String output = String.format("Information: data[0]: 0x%x", data[0]) + String.format(" - data[1]: 0x%x", data[1]) + String.format(" - data[2]: 0x%x", data[2]);
-            // textViewSendSemiMotion.setText(output);
 
             // send data to server
             sendByteInstruction(data);
