@@ -75,6 +75,9 @@ public class ControlMotionActivity extends AppCompatActivity implements SeekBar.
     boolean calibrationIsActive;
     final static String ipAdr = "192.168.5.1";
 
+    // Calibrate
+    boolean booleanFirstCalibrate;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -160,6 +163,9 @@ public class ControlMotionActivity extends AppCompatActivity implements SeekBar.
             Log.e("Connect", "Already connected to server");
         }
 
+        // Calibrate
+        booleanFirstCalibrate = true;
+
         // send init
         sendTimer.schedule(new TimerTask() {
             @Override
@@ -173,6 +179,10 @@ public class ControlMotionActivity extends AppCompatActivity implements SeekBar.
             playStream(ipAdr);
             cameraStream.setVisibility(View.VISIBLE);
         }
+
+        // Calibrate
+        booleanFirstCalibrate = false;
+        Toast.makeText(ControlMotionActivity.this, "Click \"Calibrate\" to start Sending!", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -243,6 +253,7 @@ public class ControlMotionActivity extends AppCompatActivity implements SeekBar.
 
             case R.id.imageButtonCalibrationMotion:  // ImageButton Calibration
                 calibrationIsActive = true;
+                booleanFirstCalibrate = true;
                 imageButtonCalibrationMotion.setImageResource(R.mipmap.calibration_on);
 
                 // timer after clicked calibration button
@@ -381,17 +392,19 @@ public class ControlMotionActivity extends AppCompatActivity implements SeekBar.
 
     // Methods for sending
     public void send() {
-        data = new byte[3];
-        data[0] = (byte) positionDrive;
-        data[1] = (byte) positionSteering;
-        data[2] = (byte) (128 * lightIsActive + 64 * hornIsActive);
+        if (booleanFirstCalibrate) {
+            data = new byte[3];
+            data[0] = (byte) positionDrive;
+            data[1] = (byte) positionSteering;
+            data[2] = (byte) (128 * lightIsActive + 64 * hornIsActive);
 
-        // Output
-        String output = String.format("Information: data[0]: 0x%x", data[0]) + String.format(" - data[1]: 0x%x", data[1]) + String.format(" - data[2]: 0x%x", data[2]);
-        // textViewSendMotion.setText(output);
+            // Output
+            String output = String.format("Information: data[0]: 0x%x", data[0]) + String.format(" - data[1]: 0x%x", data[1]) + String.format(" - data[2]: 0x%x", data[2]);
+            // textViewSendMotion.setText(output);
 
-        // send data to server
-        sendByteInstruction(data);
+            // send data to server
+            sendByteInstruction(data);
+        }
     }
 
     private int sendByteInstruction(byte[] data) {
